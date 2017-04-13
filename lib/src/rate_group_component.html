@@ -1,0 +1,30 @@
+<div class="row mt-1 mx-0 rate_group">
+
+  <div class="col-md-2 font-weight-bold" [class.rate_name_long]="rateGroup.name == ''">
+    {{ rateGroup.name == '' ? rateGroup.rates[0].name : rateGroup.name }}
+  </div>
+
+  <div class="col-md-10 rate">
+
+    <div class="row" *ngFor="let rate of rateGroup.rates">
+
+      <div class="col-md-3 rate_name">
+        {{ rateGroup.name == '' ? '' : rate.name }}
+      </div>
+      <div class="col-md-9 p-0">
+        <table class="w-100 font-xxs table-hover">
+          <tr>
+            <td *ngFor="let date of dates; let dateIndex = index" [class.table-success]="date.weekday == 6 || date.weekday == 7"
+                [class.text-muted]="date.day != dateIndex + 1"
+                (click)="add($event, rate.id, dateIndex + 1)"
+                (contextmenu)="substract($event, rate.id, dateIndex + 1)"
+                (selectstart)="false">{{ rate.spentTime.length >= dateIndex + 2 ? rate.spentTime[dateIndex + 1] == 0 ? '' : rate.spentTime[dateIndex + 1] : '' }}</td>
+            <td class="font-sm table-warning">{{ rate.getSummary() }}</td>
+          </tr>
+        </table>
+      </div>
+    </div>
+
+  </div>
+</div>
+<!-- /row -->

@@ -82,7 +82,7 @@
           </div>
           <!-- /row -->
 
-          <time-sheet-rate></time-sheet-rate>
+          <time-sheet-rate [dates]="dates" *ngFor="let rateGroup of rateGroups" [rateGroup]="rateGroup"></time-sheet-rate>
 
           <div class="row mt-3">
             <div class="col-md-5">
