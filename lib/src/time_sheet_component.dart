@@ -54,7 +54,7 @@ class TimeSheetComponent implements OnInit {
 
     List<DateTime> tempDates = new List<DateTime>();
 
-    for (int dayIndex = 0; dayIndex <= 30; dayIndex++) {
+    for (int dayIndex = 1; dayIndex <= 31; ++dayIndex) {
       tempDates.add(new DateTime(newDate.year, newDate.month, dayIndex));
     }
 

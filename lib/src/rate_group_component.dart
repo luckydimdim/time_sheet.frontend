@@ -60,7 +60,7 @@ class TimeSheetRateComponent {
    */
   void _normalizeSpentTimeLength(RateModel rate) {
     if (rate.spentTime.length < dates.length) {
-      for (int i = rate.spentTime.length; i <= dates.length; ++i) {
+      for (int i = rate.spentTime.length; i <= dates.length - 1; ++i) {
         rate.spentTime.add(0);
       }
     }
