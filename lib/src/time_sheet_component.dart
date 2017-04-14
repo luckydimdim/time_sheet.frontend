@@ -17,6 +17,8 @@ import 'rate_model.dart';
     providers: const [TimeSheetService],
     pipes: const [CmWeekDayPipe])
 class TimeSheetComponent implements OnInit {
+  static const DisplayName = const {'displayName': 'Табель учета рабочего времени'};
+
   final TimeSheetService _service;
 
   // Ставки и отработанное время, загруженные с сервера
