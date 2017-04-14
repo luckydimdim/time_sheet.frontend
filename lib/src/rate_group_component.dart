@@ -15,6 +15,12 @@ class TimeSheetRateComponent {
   @Input()
   RateGroupModel rateGroup = null;
 
+  @Output()
+  /**
+   * Событие обновления значения отработанного времени по ставке
+   */
+  dynamic updateSpentTime = new EventEmitter<RateModel>();
+
   /**
    * Добавить 1 к текущему значению ячейки
    */
@@ -25,8 +31,12 @@ class TimeSheetRateComponent {
 
     _normalizeSpentTimeLength(rate);
 
-    if (rate.spentTime[dayIndex] < 9)
-      rate.spentTime[dayIndex] = rate.spentTime[dayIndex] + 1;
+    if (rate.spentTime[dayIndex] >= 9)
+      return;
+
+    rate.spentTime[dayIndex] = rate.spentTime[dayIndex] + 1;
+
+    updateSpentTime.emit(rate);
   }
 
   /**
@@ -37,9 +47,12 @@ class TimeSheetRateComponent {
 
     RateModel rate = rateGroup.rates.firstWhere((item) => item.id == id);
 
-    if (rate.spentTime[dayIndex] > 0) {
-      rate.spentTime[dayIndex] = rate.spentTime[dayIndex] - 0.5;
-    }
+    if (rate.spentTime[dayIndex] <= 0)
+      return;
+
+    rate.spentTime[dayIndex] = rate.spentTime[dayIndex] - 0.5;
+
+    updateSpentTime.emit(rate);
   }
 
   /**

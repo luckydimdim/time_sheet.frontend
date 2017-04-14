@@ -8,7 +8,6 @@ import 'package:logger/logger_service.dart';
 
 import 'time_sheet_model.dart';
 import 'time_sheet_write_model.dart';
-import 'rate_group_model.dart';
 import 'rate_model.dart';
 
 /**
@@ -149,11 +148,11 @@ class TimeSheetService {
   /**
    * Обновление отработанного времени
    */
-  updateRate(String id, RateModel model) async {
-    _logger.trace('Updating spent time. Url: ${ _config.helper.timeSheetsUrl }/$id');
+  updateSpentTime(String id, RateModel model) async {
+    _logger.trace('Updating spent time. Url: ${ _config.helper.timeSheetsUrl }/$id/spent-time');
 
     try {
-      await _http.put(_config.helper.timeSheetsUrl,
+      await _http.put('${ _config.helper.timeSheetsUrl }/$id/spent-time',
         headers: {'Content-Type': 'application/json'},
         body: model.toJsonString());
       _logger.trace('Time sheet spent time successfuly updated');

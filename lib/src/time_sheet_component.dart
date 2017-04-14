@@ -8,6 +8,7 @@ import 'pipes/cm_week_day_pipe.dart';
 import 'rate_group_component.dart';
 import 'time_sheet_model.dart';
 import 'rate_group_model.dart';
+import 'rate_model.dart';
 
 @Component(
     selector: 'time-sheet',
@@ -18,11 +19,14 @@ import 'rate_group_model.dart';
 class TimeSheetComponent implements OnInit {
   final TimeSheetService _service;
 
+  // Ставки и отработанное время, загруженные с сервера
+  List<RateGroupModel> rateGroups = new List<RateGroupModel>();
+
   // Набор дат для выбиралки
   List<DateTime> dates = new List<DateTime>();
 
-  // Ставки и отработанное время, загруженные с сервера
-  List<RateGroupModel> rateGroups = new List<RateGroupModel>();
+  // Модель time sheet'a
+  TimeSheetModel model = null;
 
   TimeSheetComponent(this._service) {
     // Первоначальная установка даты
@@ -60,8 +64,15 @@ class TimeSheetComponent implements OnInit {
   ngOnInit() async {
     String mockId = '26270cfa2422b2c4ebf158285e0e16fc';
 
-    TimeSheetModel model = await _service.getTimeSheet(mockId);
+    model = await _service.getTimeSheet(mockId);
 
     rateGroups = model.rateGroups;
+  }
+
+  /**
+   * Обработка события обновления значения отработанного времени по ставке
+   */
+  void updateSpentTime(RateModel rate) {
+    _service.updateSpentTime(model.id, rate);
   }
 }
