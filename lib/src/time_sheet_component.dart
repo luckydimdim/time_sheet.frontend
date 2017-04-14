@@ -3,6 +3,7 @@ import 'dart:html';
 import 'package:angular2/angular2.dart';
 import 'package:angular2/core.dart';
 
+import 'package:angular2/router.dart';
 import 'time_sheet_service.dart';
 import 'pipes/cm_week_day_pipe.dart';
 import 'rate_group_component.dart';
@@ -19,6 +20,7 @@ import 'rate_model.dart';
 class TimeSheetComponent implements OnInit {
   static const DisplayName = const {'displayName': 'Табель учета рабочего времени'};
 
+  final Router _router;
   final TimeSheetService _service;
 
   // Ставки и отработанное время, загруженные с сервера
@@ -30,7 +32,7 @@ class TimeSheetComponent implements OnInit {
   // Модель time sheet'a
   TimeSheetModel model = null;
 
-  TimeSheetComponent(this._service) {
+  TimeSheetComponent(this._service, this._router) {
     // Первоначальная установка даты
     DateTime now = new DateTime.now();
 
@@ -64,9 +66,10 @@ class TimeSheetComponent implements OnInit {
    * Загрузка time sheet'a с сервера
    */
   ngOnInit() async {
-    String mockId = '26270cfa2422b2c4ebf158285e0e16fc';
+    Instruction ci = _router.parent.parent.currentInstruction;
+    String id = ci.component.params['id'];
 
-    model = await _service.getTimeSheet(mockId);
+    model = await _service.getTimeSheet(id);
 
     rateGroups = model.rateGroups;
   }
