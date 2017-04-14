@@ -66,7 +66,7 @@ class TimeSheetComponent implements OnInit {
    * Загрузка time sheet'a с сервера
    */
   ngOnInit() async {
-    Instruction ci = _router.parent.parent.currentInstruction;
+    Instruction ci = _router.parent.currentInstruction;
     String id = ci.component.params['id'];
 
     model = await _service.getTimeSheet(id);
