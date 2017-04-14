@@ -40,9 +40,9 @@ main() async {
     const Provider(LoggerService),
     const Provider(ConfigService),
     const Provider(AsideService),
-    provide(Client, useClass: TimeSheetInMemoryDataService)
+    // provide(Client, useClass: TimeSheetInMemoryDataService)
     // Using a real back end?
     // Import browser_client.dart and change the above to:
-    // provide(Client, useFactory: () => new BrowserClient(), deps: [])
+    provide(Client, useFactory: () => new BrowserClient(), deps: [])
   ]);
 }

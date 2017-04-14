@@ -3,60 +3,34 @@ import 'dart:html';
 import 'package:angular2/angular2.dart';
 import 'package:angular2/core.dart';
 
+import 'time_sheet_service.dart';
 import 'pipes/cm_week_day_pipe.dart';
 import 'rate_group_component.dart';
-import 'rate_group.dart';
-import 'rate.dart';
+import 'time_sheet_model.dart';
+import 'rate_group_model.dart';
 
 @Component(
     selector: 'time-sheet',
     templateUrl: 'time_sheet_component.html',
     directives: const [TimeSheetRateComponent],
+    providers: const [TimeSheetService],
     pipes: const [CmWeekDayPipe])
-class TimeSheetComponent {
-  List<DateTime> dates = new List<DateTime>();
-  List<RateGroup> rateGroups = new List<RateGroup>();
+class TimeSheetComponent implements OnInit {
+  final TimeSheetService _service;
 
-  TimeSheetComponent() {
+  // Набор дат для выбиралки
+  List<DateTime> dates = new List<DateTime>();
+
+  // Ставки и отработанное время, загруженные с сервера
+  List<RateGroupModel> rateGroups = new List<RateGroupModel>();
+
+  TimeSheetComponent(this._service) {
     // Первоначальная установка даты
     DateTime now = new DateTime.now();
 
     for (int dayIndex = 1; dayIndex <= 31; ++dayIndex) {
       dates.add(new DateTime(now.year, now.month, dayIndex));
     }
-
-    RateGroup rateGroup = new RateGroup()
-      ..name = 'SERVICE PERFORMANCE / УСЛУГИ';
-
-    Rate rate2 = new Rate()
-      ..id = '2'
-      ..name = 'Working days / Рабочие дни'
-      ..spentTime.addAll([ 1, 0, 1, 0, 1, 1, 0, 1, 0,1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1]);
-
-    Rate rate3 = new Rate()
-      ..id = '3'
-      ..name = 'Week-end / Выходные'
-      ..spentTime.addAll([ 1, 0, 1, 0, 1, 1, 0, 1, 0,1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1]);
-
-    Rate rate4 = new Rate()
-      ..id = '4'
-      ..name = 'Travel / Дни в пути'
-      ..spentTime.addAll([ 1, 0, 1, 0, 1, 1, 0, 1, 0,1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1]);
-
-    RateGroup rateGroup2 = new RateGroup();
-    Rate rate5 = new Rate()
-      ..id = '5'
-      ..name = '123123123 123123123 123123123 123123123 123123123 123123123'
-      ..spentTime.addAll([ 1, 0, 1, 0, 1, 1, 0, 1, 0,1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1, 0, 1, 0, 1, 1]);
-
-    rateGroup2.rates.add(rate5);
-
-    rateGroup.rates.add(rate2);
-    rateGroup.rates.add(rate3);
-    rateGroup.rates.add(rate4);
-
-    rateGroups.add(rateGroup);
-    rateGroups.add(rateGroup2);
   }
 
   /**
@@ -77,5 +51,17 @@ class TimeSheetComponent {
     }
 
     dates = tempDates;
+  }
+
+  @override
+  /**
+   * Загрузка time sheet'a с сервера
+   */
+  ngOnInit() async {
+    String mockId = '26270cfa2422b2c4ebf158285e0e16fc';
+
+    TimeSheetModel model = await _service.getTimeSheet(mockId);
+
+    rateGroups = model.rateGroups;
   }
 }

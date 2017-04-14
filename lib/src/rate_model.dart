@@ -1,7 +1,12 @@
+import 'package:converters/json_converter.dart';
+import 'package:converters/map_converter.dart';
+import 'package:converters/reflector.dart';
+
+@reflectable
 /**
  * Ставка
  */
-class Rate {
+class RateModel extends Object with JsonConverter, MapConverter {
   String id = '';
 
   // Имя ставки
@@ -13,6 +18,9 @@ class Rate {
 
   // Сумма отработанного времени за месяц
   num getSummary() {
-    return spentTime.reduce((a, b) => a + b);
+    if (spentTime.length > 0)
+      return spentTime.reduce((a, b) => a + b);
+    else
+      return 0;
   }
 }

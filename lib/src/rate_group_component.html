@@ -1,7 +1,7 @@
 <div class="row mt-1 mx-0 rate_group">
 
   <div class="col-md-2 font-weight-bold" [class.rate_name_long]="rateGroup.name == ''">
-    {{ rateGroup.name == '' ? rateGroup.rates[0].name : rateGroup.name }}
+    {{ rateGroup.name == null || rateGroup.name.trim() == '' ? rateGroup.rates[0].name : rateGroup.name }}
   </div>
 
   <div class="col-md-10 rate">
@@ -9,7 +9,7 @@
     <div class="row" *ngFor="let rate of rateGroup.rates">
 
       <div class="col-md-3 rate_name">
-        {{ rateGroup.name == '' ? '' : rate.name }}
+        {{ rateGroup.name == null || rateGroup.name.trim() == '' ? '' : rate.name }}
       </div>
       <div class="col-md-9 p-0">
         <table class="w-100 font-xxs table-hover">
