@@ -22,16 +22,28 @@
 
     <ul class="leaders">
       <li>
-        <span>Ф.И.О специалиста</span>
-        <span>{{ model.assignee }}</span>
+        <span>Табельный номер</span>
+        <span>{{ model.employeeNumber }}</span>
       </li>
       <li>
-        <span>Должность</span>
-        <span>{{ model.position }}</span>
+        <span>Номер позиции</span>
+        <span>{{ model.positionNumber }}</span>
       </li>
       <li>
-        <span>Место работы</span>
-        <span>{{ model.location }}</span>
+        <span>Происхождение персонала</span>
+        <span>{{ model.personnelSource }}</span>
+      </li>
+      <li>
+        <span>Номер PAAF</span>
+        <span>{{ model.paaf }}</span>
+      </li>
+      <li>
+        <span>Ссылка плана мобилизации</span>
+        <span>{{ model.mobPlanReference }}</span>
+      </li>
+      <li>
+        <span>Дата мобилизации</span>
+        <span>{{ model.mobDate }}</span>
       </li>
     </ul>
 
