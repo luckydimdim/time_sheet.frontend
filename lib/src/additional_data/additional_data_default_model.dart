@@ -1,3 +1,4 @@
+import 'package:converters/json_converter.dart';
 import 'package:converters/reflector.dart';
 import 'additional_data_model_base.dart';
 
@@ -7,5 +8,6 @@ import 'additional_data_model_base.dart';
 @reflectable
 class AdditionalDataDefaultModel extends AdditionalDataModelBase {
   @override
+  @Json(exclude: true)
   String type = 'default';
 }

@@ -11,6 +11,7 @@ abstract class AdditionalDataModelBase extends Object with JsonConverter, MapCon
   /**
    * Тип модели
    */
+  @Json(exclude: true)
   String type = '';
 
   /**

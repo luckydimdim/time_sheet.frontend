@@ -1,3 +1,4 @@
+import 'package:converters/json_converter.dart';
 import 'package:converters/reflector.dart';
 import 'additional_data_model_base.dart';
 
@@ -10,6 +11,7 @@ class AdditionalDataSouthTambeyModel extends AdditionalDataModelBase {
   /**
    * Тип модели
    */
+  @Json(exclude: true)
   String type = 'SouthTambey';
 
   /**
