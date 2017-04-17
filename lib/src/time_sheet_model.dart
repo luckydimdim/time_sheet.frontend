@@ -2,6 +2,9 @@ import 'package:converters/json_converter.dart';
 import 'package:converters/map_converter.dart';
 import 'package:converters/reflector.dart';
 
+import 'additional_data/additional_data_model_base.dart';
+import 'additional_data/additional_data_default_model.dart';
+import 'additional_data/additional_data_south_tambey_model.dart';
 import 'rate_group_model.dart';
 
 @reflectable
@@ -36,9 +39,13 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
   // Примечания
   String notes = '';
 
-  // Ставки
   @Json(exclude: true)
+  // Ставки
   List<RateGroupModel> rateGroups = new List<RateGroupModel>();
+
+  @Json(exclude: true)
+  // Модель шапки
+  AdditionalDataModelBase additionalData = null;
 
   @override
   dynamic fromJson(dynamic json) {
@@ -48,6 +55,30 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
       rateGroups.add(new RateGroupModel().fromJson(rateGroupJson));
     }
 
+    additionalData = _createAdditionalData(json['additionalData']);
+
     return this;
+  }
+
+  /**
+   * Фабричный метод
+   */
+  AdditionalDataModelBase _createAdditionalData(dynamic json) {
+    if (json == null)
+      return null;
+
+    AdditionalDataModelBase result;
+
+    switch (json['type'].toString().toUpperCase()) {
+      case 'DEFAULT':
+        result = new AdditionalDataDefaultModel().fromJson(json);
+        break;
+
+      case 'SOUTHTAMBEY':
+        result = new AdditionalDataSouthTambeyModel().fromJson(json);
+        break;
+    }
+
+    return result;
   }
 }

@@ -4,21 +4,34 @@ import 'package:angular2/angular2.dart';
 import 'package:angular2/core.dart';
 
 import 'package:angular2/router.dart';
+
 import 'time_sheet_service.dart';
 import 'pipes/cm_week_day_pipe.dart';
 import 'rate_group_component.dart';
 import 'time_sheet_model.dart';
 import 'rate_group_model.dart';
 import 'rate_model.dart';
+import 'additional_data/additional_data_default_component.dart';
+import 'additional_data/additional_data_south_tambey_component.dart';
 
 @Component(
     selector: 'time-sheet',
     templateUrl: 'time_sheet_component.html',
-    directives: const [TimeSheetRateComponent],
-    providers: const [TimeSheetService],
-    pipes: const [CmWeekDayPipe])
+    directives: const [
+      TimeSheetRateComponent,
+      AdditionalDataDefaultComponent,
+      AdditionalDataSouthTambeyComponent
+    ],
+    providers: const [
+      TimeSheetService
+    ],
+    pipes: const [
+      CmWeekDayPipe
+    ])
 class TimeSheetComponent implements OnInit {
-  static const DisplayName = const {'displayName': 'Табель учета рабочего времени'};
+  static const DisplayName = const {
+    'displayName': 'Табель учета рабочего времени'
+  };
 
   final Router _router;
   final TimeSheetService _service;
@@ -26,6 +39,7 @@ class TimeSheetComponent implements OnInit {
   // Ставки и отработанное время, загруженные с сервера
   List<RateGroupModel> rateGroups = new List<RateGroupModel>();
 
+  // TODO: заполнять список значениями, полученными с сервера
   // Набор дат для выбиралки
   List<DateTime> dates = new List<DateTime>();
 
@@ -59,6 +73,8 @@ class TimeSheetComponent implements OnInit {
     }
 
     dates = tempDates;
+
+    // TODO: постить выбранную дату на сервер
   }
 
   @override
@@ -66,12 +82,15 @@ class TimeSheetComponent implements OnInit {
    * Загрузка time sheet'a с сервера
    */
   ngOnInit() async {
-    Instruction ci = _router.parent.currentInstruction;
-    String id = ci.component.params['id'];
+    Instruction ci = _router.parent?.currentInstruction;
 
-    model = await _service.getTimeSheet(id);
+    if (ci != null) {
+      String id = ci.component.params['id'];
 
-    rateGroups = model.rateGroups;
+      model = await _service.getTimeSheet(id);
+
+      rateGroups = model.rateGroups;
+    }
   }
 
   /**
