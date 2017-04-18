@@ -1,4 +1,4 @@
-import 'package:angular2/angular2.dart';
+﻿import 'package:angular2/angular2.dart';
 import 'package:angular2/core.dart';
 
 import 'package:angular2/router.dart';
@@ -86,6 +86,72 @@ class TimeSheetComponent implements OnInit {
     _service.updateTimeSheet(writeModel);
   }
 
+  /**
+   *
+   */
+  String _getMonthName(int month) {
+
+    switch (month) {
+      case DateTime.JANUARY:
+        return "Январь";
+      case DateTime.FEBRUARY:
+        return "Февраль";
+      case DateTime.MARCH:
+        return "Март";
+      case DateTime.APRIL:
+        return "Апрель";
+      case DateTime.MAY:
+        return "Май";
+      case DateTime.JUNE:
+        return "Июнь";
+      case DateTime.JULY:
+        return "Июль";
+      case DateTime.AUGUST:
+        return "Август";
+      case DateTime.SEPTEMBER:
+        return "Сентябрь";
+      case DateTime.OCTOBER:
+        return "Октябрь";
+      case DateTime.NOVEMBER:
+        return "Ноябрь";
+      case DateTime.DECEMBER:
+        return "Декабрь";
+      default:
+        return "??";
+    }
+  }
+
+  /**
+   * Построить список доступных периодов
+   */
+  List<TimeSheetPeriod> _buildPeriod(DateTime from, DateTime to ) {
+    var result = new List<TimeSheetPeriod>();
+
+    if (from == null || to == null)
+      return result;
+
+    int fromMonth = from.month;
+    int fromYear = from.year;
+
+    do {
+      var value = '${fromMonth}.${fromYear}';
+      var name = '${_getMonthName(fromMonth)} ${fromYear}';
+
+      result.add(new TimeSheetPeriod(name, value));
+
+      if (fromMonth == 12) {
+        fromMonth = 1;
+        fromYear++;
+      }
+      else {
+        fromMonth++;
+      }
+
+    } while (fromYear <= to.year  && fromMonth <= to.month );
+
+    return result;
+  }
+
   @override
   /**
    * Загрузка time sheet'a с сервера
@@ -102,19 +168,7 @@ class TimeSheetComponent implements OnInit {
 
       rateGroups = model.rateGroups;
 
-      // TODO: загружать период с сервера
-      periods.add(new TimeSheetPeriod('Январь 2017', '1.2017'));
-      periods.add(new TimeSheetPeriod('Февраль 2017', '2.2017'));
-      periods.add(new TimeSheetPeriod('Март 2017', '3.2017'));
-      periods.add(new TimeSheetPeriod('Апрель 2017', '4.2017'));
-      periods.add(new TimeSheetPeriod('Май 2017', '5.2017'));
-      periods.add(new TimeSheetPeriod('Июнь 2017', '6.2017'));
-      periods.add(new TimeSheetPeriod('Июль 2017', '7.2017'));
-      periods.add(new TimeSheetPeriod('Август 2017', '8.2017'));
-      periods.add(new TimeSheetPeriod('Сентябрь 2017', '9.2017'));
-      periods.add(new TimeSheetPeriod('Октябрь 2017', '10.2017'));
-      periods.add(new TimeSheetPeriod('Ноябрь 2017', '11.2017'));
-      periods.add(new TimeSheetPeriod('Декабрь 2017', '12.2017'));
+      periods = _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo);
 
       // Установка выбранной даты
       if (model.month != null && model.month != ''
