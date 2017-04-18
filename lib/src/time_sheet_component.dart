@@ -112,9 +112,9 @@ class TimeSheetComponent implements OnInit {
       periods.add(new TimeSheetPeriod('Июль 2017', '7.2017'));
       periods.add(new TimeSheetPeriod('Август 2017', '8.2017'));
       periods.add(new TimeSheetPeriod('Сентябрь 2017', '9.2017'));
-      periods.add(new TimeSheetPeriod( 'Октябрь 2017', '10.2017'));
-      periods.add(new TimeSheetPeriod( 'Ноябрь 2017', '11.2017'));
-      periods.add(new TimeSheetPeriod( 'Декабрь 2017', '12.2017'));
+      periods.add(new TimeSheetPeriod('Октябрь 2017', '10.2017'));
+      periods.add(new TimeSheetPeriod('Ноябрь 2017', '11.2017'));
+      periods.add(new TimeSheetPeriod('Декабрь 2017', '12.2017'));
 
       // Установка выбранной даты
       if (model.month != null && model.month != ''
