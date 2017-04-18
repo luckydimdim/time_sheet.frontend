@@ -29,21 +29,10 @@
               <div class="col-md-2 float-md-right">
                 <label for="time-sheet-month">Месяц</label>
                 <select class="form-control" id="time-sheet-month"
-                  [(ngModel)]="selectedDate"
-                  ngControl="selectedDate">
+                  [(ngModel)]="selectedPeriod"
+                  ngControl="selectedPeriod">
 
-                  <option value="1.2017">Январь 2017</option>
-                  <option value="2.2017">Февраль 2017</option>
-                  <option value="3.2017">Март 2017</option>
-                  <option value="4.2017">Апрель 2017</option>
-                  <option value="5.2017">Май 2017</option>
-                  <option value="6.2017">Июнь 2017</option>
-                  <option value="7.2017">Июль 2017</option>
-                  <option value="8.2017">Август 2017</option>
-                  <option value="9.2017">Сентябрь 2017</option>
-                  <option value="10.2017">Октябрь 2017</option>
-                  <option value="11.2017">Ноябрь 2017</option>
-                  <option value="12.2017">Декабрь 2017</option>
+                  <option *ngFor="let period of periods" [ngValue]="period.value">{{ period.name }}</option>
                 </select>
               </div>
               <!-- /col -->

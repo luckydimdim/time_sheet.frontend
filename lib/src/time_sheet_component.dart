@@ -38,12 +38,12 @@ class TimeSheetComponent implements OnInit {
   // Ставки и отработанное время, загруженные с сервера
   List<RateGroupModel> rateGroups = new List<RateGroupModel>();
 
-  // TODO: заполнять список значениями, полученными с сервера
-  // Набор дат для выбиралки
+  // Набор дат для таблицы
   List<DateTime> dates = new List<DateTime>();
 
   // Выбранный месяц и год
-  String selectedDate = '';
+  String selectedPeriod = '';
+  List<Period> periods = new List<Period>();
 
   // Модель time sheet'a
   TimeSheetModel model = new TimeSheetModel();
@@ -61,7 +61,7 @@ class TimeSheetComponent implements OnInit {
    * Выбор даты из списка
    */
   void updateModel(NgForm ngForm) {
-    List<String> monthAndYear = selectedDate.split('.');
+    List<String> monthAndYear = selectedPeriod.split('.');
 
     int month = int.parse(monthAndYear.first, onError: (_) => 0);
     int year = int.parse(monthAndYear.last, onError: (_) => 0);
@@ -85,6 +85,10 @@ class TimeSheetComponent implements OnInit {
     _service.updateTimeSheet(writeModel);
   }
 
+  /**
+   * Обработка события обновления значения отработанного времени по ставке
+   */
+
   @override
   /**
    * Загрузка time sheet'a с сервера
@@ -92,26 +96,36 @@ class TimeSheetComponent implements OnInit {
   ngOnInit() async {
     Instruction ci = _router.parent?.currentInstruction;
 
-    //String id = '26270cfa2422b2c4ebf158285e0fb6b6';
+    String id = '26270cfa2422b2c4ebf158285e0fb6b6';
 
-    if (ci != null) {
-      String id = ci.component.params['id'];
+    if (ci == null) {
+      //String id = ci.component.params['id'];
 
       model = await _service.getTimeSheet(id);
 
       rateGroups = model.rateGroups;
 
+      // TODO: загружать период с сервера
+      periods.add(new Period('1.2017', 'Январь 2017'));
+      periods.add(new Period('2.2017', 'Февраль 2017'));
+      periods.add(new Period('3.2017', 'Март 2017'));
+      periods.add(new Period('4.2017', 'Апрель 2017'));
+      periods.add(new Period('5.2017', 'Май 2017'));
+      periods.add(new Period('6.2017', 'Июнь 2017'));
+      periods.add(new Period('7.2017', 'Июль 2017'));
+      periods.add(new Period('8.2017', 'Август 2017'));
+      periods.add(new Period('9.2017', 'Сентябрь 2017'));
+      periods.add(new Period('10.2017', 'Октябрь 2017'));
+      periods.add(new Period('11.2017', 'Ноябрь 2017'));
+      periods.add(new Period('12.2017', 'Декабрь 2017'));
+
       // Установка выбранной даты
       if (model.month != null && model.month != ''
         && model.year != null && model.year != '') {
-        selectedDate = '${model.month}.${model.year}';
+        selectedPeriod = '${model.month}.${model.year}';
       }
     }
   }
-
-  /**
-   * Обработка события обновления значения отработанного времени по ставке
-   */
   void updateSpentTime(RateModel rate) {
     _service.updateSpentTime(model.id, rate);
   }
@@ -124,4 +138,11 @@ class TimeSheetComponent implements OnInit {
     'ng-valid': control.valid ?? false,
     'ng-invalid': control.valid == false
   };
+}
+
+class Period {
+  final String name;
+  final String value;
+
+  Period(this.value, this.name);
 }
