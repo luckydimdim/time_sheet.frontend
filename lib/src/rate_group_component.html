@@ -8,12 +8,14 @@
 
     <div class="row" *ngFor="let rate of rateGroup.rates">
 
-      <div class="col-md-3 rate_name">
+      <div class="col-md-3 rate_name" #rateCaption>
         {{ rateGroup.name == null || rateGroup.name.trim() == '' ? '' : rate.name }}
       </div>
       <div class="col-md-9 p-0">
         <table class="w-100 font-xxs table-hover">
-          <tr>
+          <tr
+            (mouseover)="rateCaption.style.backgroundColor = '#eee'"
+            (mouseout)="rateCaption.style.backgroundColor = '#fff'">
             <td *ngFor="let date of dates; let dateIndex = index" [class.table-success]="date.weekday == 6 || date.weekday == 7"
                 [class.text-muted]="date.day != dateIndex + 1"
                 (click)="add($event, rate.id, dateIndex + 1)"
