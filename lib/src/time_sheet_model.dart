@@ -47,6 +47,9 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
   // Модель шапки
   AdditionalDataModelBase additionalData = null;
 
+  // предупреждения
+  List<String> warning= new List<String>();
+
   @override
   dynamic fromJson(dynamic json) {
     super.fromJson(json);
@@ -59,6 +62,12 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
 
     return this;
   }
+
+  // Начало доступных периодов
+  DateTime availablePeriodsFrom = null;
+
+  // Окончание доступных периодов
+  DateTime availablePeriodsTo = null;
 
   /**
    * Фабричный метод
