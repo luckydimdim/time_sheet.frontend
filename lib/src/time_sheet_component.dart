@@ -4,6 +4,7 @@ import 'package:angular2/core.dart';
 import 'package:angular2/router.dart';
 
 import 'time_sheet_service.dart';
+import 'time_sheet_period.dart';
 import 'pipes/cm_week_day_pipe.dart';
 import 'rate_group_component.dart';
 import 'time_sheet_model.dart';
@@ -43,7 +44,7 @@ class TimeSheetComponent implements OnInit {
 
   // Выбранный месяц и год
   String selectedPeriod = '';
-  List<Period> periods = new List<Period>();
+  List<TimeSheetPeriod> periods = new List<TimeSheetPeriod>();
 
   // Модель time sheet'a
   TimeSheetModel model = new TimeSheetModel();
@@ -60,8 +61,8 @@ class TimeSheetComponent implements OnInit {
   /**
    * Выбор даты из списка
    */
-  void updateModel(NgForm ngForm) {
-    List<String> monthAndYear = selectedPeriod.split('.');
+  void updateModel(dynamic formValues) {
+    List<String> monthAndYear = formValues['period'].split('.');
 
     int month = int.parse(monthAndYear.first, onError: (_) => 0);
     int year = int.parse(monthAndYear.last, onError: (_) => 0);
@@ -88,7 +89,6 @@ class TimeSheetComponent implements OnInit {
   /**
    * Обработка события обновления значения отработанного времени по ставке
    */
-
   @override
   /**
    * Загрузка time sheet'a с сервера
@@ -96,28 +96,28 @@ class TimeSheetComponent implements OnInit {
   ngOnInit() async {
     Instruction ci = _router.parent?.currentInstruction;
 
-    String id = '26270cfa2422b2c4ebf158285e0fb6b6';
+    //String id = '26270cfa2422b2c4ebf158285e0fb6b6';
 
-    if (ci == null) {
-      //String id = ci.component.params['id'];
+    if (ci != null) {
+      String id = ci.component.params['id'];
 
       model = await _service.getTimeSheet(id);
 
       rateGroups = model.rateGroups;
 
       // TODO: загружать период с сервера
-      periods.add(new Period('1.2017', 'Январь 2017'));
-      periods.add(new Period('2.2017', 'Февраль 2017'));
-      periods.add(new Period('3.2017', 'Март 2017'));
-      periods.add(new Period('4.2017', 'Апрель 2017'));
-      periods.add(new Period('5.2017', 'Май 2017'));
-      periods.add(new Period('6.2017', 'Июнь 2017'));
-      periods.add(new Period('7.2017', 'Июль 2017'));
-      periods.add(new Period('8.2017', 'Август 2017'));
-      periods.add(new Period('9.2017', 'Сентябрь 2017'));
-      periods.add(new Period('10.2017', 'Октябрь 2017'));
-      periods.add(new Period('11.2017', 'Ноябрь 2017'));
-      periods.add(new Period('12.2017', 'Декабрь 2017'));
+      periods.add(new TimeSheetPeriod('Январь 2017', '1.2017'));
+      periods.add(new TimeSheetPeriod('Февраль 2017', '2.2017'));
+      periods.add(new TimeSheetPeriod('Март 2017', '3.2017'));
+      periods.add(new TimeSheetPeriod('Апрель 2017', '4.2017'));
+      periods.add(new TimeSheetPeriod('Май 2017', '5.2017'));
+      periods.add(new TimeSheetPeriod('Июнь 2017', '6.2017'));
+      periods.add(new TimeSheetPeriod('Июль 2017', '7.2017'));
+      periods.add(new TimeSheetPeriod('Август 2017', '8.2017'));
+      periods.add(new TimeSheetPeriod('Сентябрь 2017', '9.2017'));
+      periods.add(new TimeSheetPeriod( 'Октябрь 2017', '10.2017'));
+      periods.add(new TimeSheetPeriod( 'Ноябрь 2017', '11.2017'));
+      periods.add(new TimeSheetPeriod( 'Декабрь 2017', '12.2017'));
 
       // Установка выбранной даты
       if (model.month != null && model.month != ''
@@ -138,11 +138,4 @@ class TimeSheetComponent implements OnInit {
     'ng-valid': control.valid ?? false,
     'ng-invalid': control.valid == false
   };
-}
-
-class Period {
-  final String name;
-  final String value;
-
-  Period(this.value, this.name);
 }

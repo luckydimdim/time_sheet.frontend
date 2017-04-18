@@ -8,7 +8,7 @@
           <i class="fa fa-clock-o"></i>Ежемесячный табель учета рабочего времени
         </div>
         <div class="card-block">
-          <form (change)="updateModel(timeSheetForm)" #timeSheetForm="ngForm">
+          <form (change)="updateModel(timeSheetForm.value)" #timeSheetForm="ngForm">
 
             <div class="row">
 
@@ -30,9 +30,9 @@
                 <label for="time-sheet-month">Месяц</label>
                 <select class="form-control" id="time-sheet-month"
                   [(ngModel)]="selectedPeriod"
-                  ngControl="selectedPeriod">
+                  ngControl="period">
 
-                  <option *ngFor="let period of periods" [ngValue]="period.value">{{ period.name }}</option>
+                  <option *ngFor="let period of periods" [value]="period.value">{{ period.name }}</option>
                 </select>
               </div>
               <!-- /col -->
