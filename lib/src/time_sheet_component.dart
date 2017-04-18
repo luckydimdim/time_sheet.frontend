@@ -86,9 +86,6 @@ class TimeSheetComponent implements OnInit {
     _service.updateTimeSheet(writeModel);
   }
 
-  /**
-   * Обработка события обновления значения отработанного времени по ставке
-   */
   @override
   /**
    * Загрузка time sheet'a с сервера
@@ -126,6 +123,10 @@ class TimeSheetComponent implements OnInit {
       }
     }
   }
+
+  /**
+   * Обработка события обновления значения отработанного времени по ставке
+   */
   void updateSpentTime(RateModel rate) {
     _service.updateSpentTime(model.id, rate);
   }

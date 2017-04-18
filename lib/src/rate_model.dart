@@ -16,7 +16,9 @@ class RateModel extends Object with JsonConverter, MapConverter {
   // (порядковый номер элемента массива равняется числу месяца)
   List<num> spentTime = new List<num>();
 
-  // Сумма отработанного времени за месяц
+  /**
+   * Сумма отработанного времени за месяц
+   */
   num getSummary() {
     if (spentTime.length > 0)
       return spentTime.reduce((a, b) => a + b);
