@@ -1,5 +1,3 @@
-import 'dart:html';
-
 import 'package:angular2/angular2.dart';
 import 'package:angular2/core.dart';
 
@@ -13,6 +11,7 @@ import 'rate_group_model.dart';
 import 'rate_model.dart';
 import 'additional_data/additional_data_default_component.dart';
 import 'additional_data/additional_data_south_tambey_component.dart';
+import 'time_sheet_write_model.dart';
 
 @Component(
     selector: 'time-sheet',
@@ -43,8 +42,11 @@ class TimeSheetComponent implements OnInit {
   // Набор дат для выбиралки
   List<DateTime> dates = new List<DateTime>();
 
+  // Выбранный месяц и год
+  String selectedDate = '';
+
   // Модель time sheet'a
-  TimeSheetModel model = null;
+  TimeSheetModel model = new TimeSheetModel();
 
   TimeSheetComponent(this._service, this._router) {
     // Первоначальная установка даты
@@ -58,8 +60,8 @@ class TimeSheetComponent implements OnInit {
   /**
    * Выбор даты из списка
    */
-  void selectMonth(SelectElement date) {
-    List<String> monthAndYear = date.value.split('.');
+  void updateModel(NgForm ngForm) {
+    List<String> monthAndYear = selectedDate.split('.');
 
     int month = int.parse(monthAndYear.first, onError: (_) => 0);
     int year = int.parse(monthAndYear.last, onError: (_) => 0);
@@ -74,7 +76,13 @@ class TimeSheetComponent implements OnInit {
 
     dates = tempDates;
 
-    // TODO: постить выбранную дату на сервер
+    // Отправка данных на сервер
+    var writeModel = new TimeSheetWriteModel()
+      ..id = model.id
+      ..month = newDate.month
+      ..year = newDate.year
+      ..notes = model.notes;
+    _service.updateTimeSheet(writeModel);
   }
 
   @override
@@ -84,14 +92,20 @@ class TimeSheetComponent implements OnInit {
   ngOnInit() async {
     Instruction ci = _router.parent?.currentInstruction;
 
-    String id = '26270cfa2422b2c4ebf158285e0fb6b6';
+    //String id = '26270cfa2422b2c4ebf158285e0fb6b6';
 
-    if (ci == null) {
-      //String id = ci.component.params['id'];
+    if (ci != null) {
+      String id = ci.component.params['id'];
 
       model = await _service.getTimeSheet(id);
 
       rateGroups = model.rateGroups;
+
+      // Установка выбранной даты
+      if (model.month != null && model.month != ''
+        && model.year != null && model.year != '') {
+        selectedDate = '${model.month}.${model.year}';
+      }
     }
   }
 
@@ -101,4 +115,13 @@ class TimeSheetComponent implements OnInit {
   void updateSpentTime(RateModel rate) {
     _service.updateSpentTime(model.id, rate);
   }
+
+  Map<String, bool> controlStateClasses(NgControl control) => {
+    'ng-dirty': control.dirty ?? false,
+    'ng-pristine': control.pristine ?? false,
+    'ng-touched': control.touched ?? false,
+    'ng-untouched': control.untouched ?? false,
+    'ng-valid': control.valid ?? false,
+    'ng-invalid': control.valid == false
+  };
 }

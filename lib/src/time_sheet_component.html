@@ -8,91 +8,114 @@
           <i class="fa fa-clock-o"></i>Ежемесячный табель учета рабочего времени
         </div>
         <div class="card-block">
+          <form (change)="updateModel(timeSheetForm)" #timeSheetForm="ngForm">
 
-          <div class="row">
+            <div class="row">
 
-            <div class="col-md-10">
+              <div class="col-md-10">
 
-              <div [ngSwitch]="model?.additionalData?.type">
-                <template [ngSwitchWhen]="'SouthTambey'">
-                  <additional-data-south-tambey [model]="model.additionalData"></additional-data-south-tambey>
-                </template>
-                <template [ngSwitchWhen]="'default'">
-                  <additional-data-default [model]="model.additionalData"></additional-data-default>
-                </template>
-              </div>
-
-            </div>
-            <!-- /col -->
-
-            <div class="col-md-2 float-md-right">
-              <label for="time-sheet-month">Месяц</label>
-              <select class="form-control" #month (change)="selectMonth(month)" id="time-sheet-month">
-                <option value="01.2017">Январь 2017</option>
-                <option value="02.2017">Февраль 2017</option>
-                <option value="03.2017">Март 2017</option>
-                <option value="04.2017">Апрель 2017</option>
-                <option value="05.2017">Май 2017</option>
-                <option value="06.2017">Июнь 2017</option>
-                <option value="07.2017">Июль 2017</option>
-                <option value="08.2017">Август 2017</option>
-                <option value="09.2017">Сентябрь 2017</option>
-                <option value="10.2017">Октябрь 2017</option>
-                <option value="11.2017">Ноябрь 2017</option>
-                <option value="12.2017">Декабрь 2017</option>
-              </select>
-            </div>
-            <!-- /col -->
-
-          </div>
-          <!-- /row -->
-
-          <div class="row mt-1 mx-0 rate_group">
-
-            <div class="col-md-2 font-weight-bold rate_descr">
-              DESCRIPTION / ОПИСАНИЕ
-            </div>
-
-            <div class="col-md-10 rate rate_caption">
-
-              <div class="row">
-                <div class="col-md-3"></div>
-
-                <div class="col-md-9 p-0">
-                  <table class="w-100">
-                    <tr class="font-weight-bold">
-                      <td *ngFor="let date of dates; let dateIndex = index" [class.table-success]="date.weekday == 6 || date.weekday == 7" [class.text-muted]="date.day != dateIndex + 1">{{ dateIndex + 1 }}</td>
-                      <td class="table-warning rate_total_caption" rowspan="2">Итого</td>
-                    </tr>
-                    <tr class="font-xs rate_day_names">
-                      <td *ngFor="let date of dates; let dateIndex = index" [class.table-success]="date.weekday == 6 || date.weekday == 7" [class.text-muted]="date.day != dateIndex + 1">{{ date.weekday | cmWeekDay }}</td>
-                    </tr>
-                  </table>
+                <div [ngSwitch]="model?.additionalData?.type">
+                  <template [ngSwitchWhen]="'SouthTambey'">
+                    <additional-data-south-tambey [model]="model.additionalData"></additional-data-south-tambey>
+                  </template>
+                  <template [ngSwitchWhen]="'default'">
+                    <additional-data-default [model]="model.additionalData"></additional-data-default>
+                  </template>
                 </div>
-                <!-- /col -->
 
               </div>
-              <!-- /row -->
+              <!-- /col -->
+
+              <div class="col-md-2 float-md-right">
+                <label for="time-sheet-month">Месяц</label>
+                <select class="form-control" id="time-sheet-month"
+                  [(ngModel)]="selectedDate"
+                  ngControl="selectedDate">
+
+                  <option value="1.2017">Январь 2017</option>
+                  <option value="2.2017">Февраль 2017</option>
+                  <option value="3.2017">Март 2017</option>
+                  <option value="4.2017">Апрель 2017</option>
+                  <option value="5.2017">Май 2017</option>
+                  <option value="6.2017">Июнь 2017</option>
+                  <option value="7.2017">Июль 2017</option>
+                  <option value="8.2017">Август 2017</option>
+                  <option value="9.2017">Сентябрь 2017</option>
+                  <option value="10.2017">Октябрь 2017</option>
+                  <option value="11.2017">Ноябрь 2017</option>
+                  <option value="12.2017">Декабрь 2017</option>
+                </select>
+              </div>
+              <!-- /col -->
 
             </div>
-            <!-- /col -->
+            <!-- /row -->
 
-          </div>
-          <!-- /row -->
+            <div class="row mt-1 mx-0 rate_group">
 
-          <time-sheet-rate
-            [dates]="dates"
-            *ngFor="let rateGroup of rateGroups"
-            [rateGroup]="rateGroup"
-            (updateSpentTime)="updateSpentTime($event)"></time-sheet-rate>
+              <div class="col-md-2 font-weight-bold rate_descr">
+                DESCRIPTION / ОПИСАНИЕ
+              </div>
 
-          <div class="row mt-3">
-            <div class="col-md-5">
-              <label for="time-sheet-note">Примечание</label>
-              <textarea rows="4" class="form-control" placeholder="Укажите примечание..." id="time-sheet-note"></textarea>
+              <div class="col-md-10 rate rate_caption">
+
+                <div class="row">
+                  <div class="col-md-3"></div>
+
+                  <div class="col-md-9 p-0">
+                    <table class="w-100">
+                      <tr class="font-weight-bold">
+                        <td *ngFor="let date of dates; let dateIndex = index"
+                            [class.table-success]="date.weekday == 6 || date.weekday == 7"
+                            [class.text-muted]="date.day != dateIndex + 1">{{ dateIndex + 1 }}
+                        </td>
+                        <td class="table-warning rate_total_caption" rowspan="2">Итого</td>
+                      </tr>
+                      <tr class="font-xs rate_day_names">
+                        <td *ngFor="let date of dates; let dateIndex = index"
+                            [class.table-success]="date.weekday == 6 || date.weekday == 7"
+                            [class.text-muted]="date.day != dateIndex + 1">{{ date.weekday | cmWeekDay }}
+                        </td>
+                      </tr>
+                    </table>
+                  </div>
+                  <!-- /col -->
+
+                </div>
+                <!-- /row -->
+
+              </div>
+              <!-- /col -->
+
             </div>
-          </div>
+            <!-- /row -->
 
+            <time-sheet-rate
+              [dates]="dates"
+              *ngFor="let rateGroup of rateGroups"
+              [rateGroup]="rateGroup"
+              (updateSpentTime)="updateSpentTime($event)"></time-sheet-rate>
+
+            <div class="row mt-3">
+              <div class="col-md-5">
+                <div class="form-group"
+                     [class.has-danger]="!notesControl.valid && (notesControl.dirty || notesControl.touched)"
+                     [class.has-success]="notesControl.valid && notesControl.touched">
+
+                  <label for="time-sheet-note">Примечание</label>
+                  <textarea rows="4" class="form-control" placeholder="Укажите примечание..." id="time-sheet-note"
+                            [(ngModel)]="model.notes"
+                            ngControl="notes"
+                            #notesControl="ngForm"
+                            [ngClass]="controlStateClasses(notesControl)"
+                            [class.form-control-danger]="!notesControl.valid && (notesControl.dirty || notesControl.touched)"
+                            [class.form-control-success]="notesControl.valid && notesControl.touched"></textarea>
+
+                </div>
+              </div>
+            </div>
+
+          </form>
         </div>
         <!-- /card-block -->
 
