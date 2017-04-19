@@ -4,15 +4,15 @@
     <ul class="leaders">
       <li>
         <span>Ф.И.О специалиста</span>
-        <span>{{ model.assignee }}</span>
+        <span>{{ model.assignee == null || model.assignee.trim() == '' ? 'н/д' : model.assignee }}</span>
       </li>
       <li>
         <span>Должность</span>
-        <span>{{ model.position }}</span>
+        <span>{{ model.position == null || model.position.trim() == '' ? 'н/д' : model.position }}</span>
       </li>
       <li>
         <span>Место работы</span>
-        <span>{{ model.location }}</span>
+        <span>{{ model.location == null || model.location.trim() == '' ? 'н/д' : model.location }}</span>
       </li>
     </ul>
 
@@ -23,15 +23,15 @@
     <ul class="leaders">
       <li>
         <span>Табельный номер</span>
-        <span>{{ model.employeeNumber }}</span>
+        <span>{{ model.employeeNumber == null || model.employeeNumber.trim() == '' ? 'н/д' : model.employeeNumber }}</span>
       </li>
       <li>
         <span>Номер позиции</span>
-        <span>{{ model.positionNumber }}</span>
+        <span>{{ model.positionNumber == null || model.positionNumber.trim() == '' ? 'н/д' : model.positionNumber }}</span>
       </li>
       <li>
         <span>Происхождение персонала</span>
-        <span>{{ model.personnelSource }}</span>
+        <span>{{ model.personnelSource == null || model.personnelSource.trim() == '' ? 'н/д' : model.personnelSource }}</span>
       </li>
     </ul>
 
@@ -42,15 +42,15 @@
     <ul class="leaders">
       <li>
         <span>Номер PAAF</span>
-        <span>{{ model.paaf }}</span>
+        <span>{{ model.paaf == null || model.paaf.trim() == '' ? 'н/д' : model.paaf }}</span>
       </li>
       <li>
         <span>Ссылка плана мобилизации</span>
-        <span>{{ model.mobPlanReference }}</span>
+        <span>{{ model.mobPlanReference == null || model.mobPlanReference.trim() == '' ? 'н/д' : model.mobPlanReference }}</span>
       </li>
       <li>
         <span>Дата мобилизации</span>
-        <span>{{ model.mobDate }}</span>
+        <span>{{ model.mobDate == null || model.mobDate.trim() == '' ? 'н/д' : model.mobDate }}</span>
       </li>
     </ul>
 

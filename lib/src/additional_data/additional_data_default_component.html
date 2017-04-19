@@ -4,15 +4,15 @@
     <ul class="leaders">
       <li>
         <span>Ф.И.О специалиста</span>
-        <span>{{ model.assignee }}</span>
+        <span>{{ model.assignee == null || model.assignee.trim() == '' ? 'н/д' : model.assignee }}</span>
       </li>
       <li>
         <span>Должность</span>
-        <span>{{ model.position }}</span>
+        <span>{{ model.position == null || model.position.trim() == '' ? 'н/д' : model.position }}</span>
       </li>
       <li>
         <span>Место работы</span>
-        <span>{{ model.location }}</span>
+        <span>{{ model.location == null || model.location.trim() == '' ? 'н/д' : model.location }}</span>
       </li>
     </ul>
 
