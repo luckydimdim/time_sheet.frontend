@@ -3,6 +3,8 @@ import 'package:angular2/core.dart';
 
 import 'package:angular2/router.dart';
 
+import 'package:angular_utils/directives.dart';
+
 import 'time_sheet_service.dart';
 import 'time_sheet_period.dart';
 import 'pipes/cm_week_day_pipe.dart';
@@ -20,7 +22,8 @@ import 'time_sheet_write_model.dart';
     directives: const [
       TimeSheetRateComponent,
       AdditionalDataDefaultComponent,
-      AdditionalDataSouthTambeyComponent
+      AdditionalDataSouthTambeyComponent,
+      CmRouterLink
     ],
     providers: const [
       TimeSheetService
@@ -90,7 +93,6 @@ class TimeSheetComponent implements OnInit {
    *
    */
   String _getMonthName(int month) {
-
     switch (month) {
       case DateTime.JANUARY:
         return "Январь";
@@ -129,8 +131,7 @@ class TimeSheetComponent implements OnInit {
   List<TimeSheetPeriod> _buildPeriod(DateTime from, DateTime to, int includeMonth, int includeYear ) {
     var result = new List<TimeSheetPeriod>();
 
-    if (from == null || to == null)
-      return result;
+    if (from == null || to == null) return result;
 
     int fromMonth = from.month;
     int fromYear = from.year;
@@ -151,12 +152,10 @@ class TimeSheetComponent implements OnInit {
       if (fromMonth == 12) {
         fromMonth = 1;
         fromYear++;
-      }
-      else {
+      } else {
         fromMonth++;
       }
-
-    } while (fromYear <= to.year  && fromMonth <= to.month );
+    } while (fromYear <= to.year && fromMonth <= to.month);
 
     return result;
   }
@@ -178,10 +177,13 @@ class TimeSheetComponent implements OnInit {
       rateGroups = model.rateGroups;
 
       periods = _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo, model.month, model.year);
+          _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo);
 
       // Установка выбранной даты
-      if (model.month != null && model.month != ''
-        && model.year != null && model.year != '') {
+      if (model.month != null &&
+          model.month != '' &&
+          model.year != null &&
+          model.year != '') {
         selectedPeriod = '${model.month}.${model.year}';
       }
     }
@@ -195,11 +197,11 @@ class TimeSheetComponent implements OnInit {
   }
 
   Map<String, bool> controlStateClasses(NgControl control) => {
-    'ng-dirty': control.dirty ?? false,
-    'ng-pristine': control.pristine ?? false,
-    'ng-touched': control.touched ?? false,
-    'ng-untouched': control.untouched ?? false,
-    'ng-valid': control.valid ?? false,
-    'ng-invalid': control.valid == false
-  };
+        'ng-dirty': control.dirty ?? false,
+        'ng-pristine': control.pristine ?? false,
+        'ng-touched': control.touched ?? false,
+        'ng-untouched': control.untouched ?? false,
+        'ng-valid': control.valid ?? false,
+        'ng-invalid': control.valid == false
+      };
 }
