@@ -6,7 +6,8 @@
       <div class="card">
         <div class="card-header">
           <i class="fa fa-clock-o"></i>Ежемесячный табель учета рабочего времени
-          <a href="#" [cmRouterLink]="['../RequestView']" class="btn btn-sm btn-info float-xs-right"><i class="fa fa-check-circle"></i> Завершить</a>
+          <a href="#" [cmRouterLink]="['../RequestView']" class="btn btn-sm btn-success float-xs-right ml-1"><i class="fa fa-check-circle"></i> Завершить</a>
+          <a href="#" [cmRouterLink]="['../RequestView']" class="btn btn-sm btn-info float-xs-right"><i class="fa fa-save"></i> Отложить</a>
         </div>
         <div class="card-block">
           <form (change)="updateModel(timeSheetForm.value)" #timeSheetForm="ngForm">
