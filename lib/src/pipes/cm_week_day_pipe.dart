@@ -33,7 +33,7 @@ class CmWeekDayPipe extends PipeTransform {
         result = 'вс';
         break;
       default:
-        result = 'n/a';
+        result = 'н/д';
         break;
     }
 

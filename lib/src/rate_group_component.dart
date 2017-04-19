@@ -34,7 +34,7 @@ class TimeSheetRateComponent {
 
     _normalizeSpentTimeLength(rate);
 
-    if (rate.spentTime[dayIndex] >= 9)
+    if (rate.spentTime[dayIndex] >= 99)
       return;
 
     rate.spentTime[dayIndex] = rate.spentTime[dayIndex] + 1;
