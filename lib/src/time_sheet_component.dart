@@ -177,7 +177,6 @@ class TimeSheetComponent implements OnInit {
       rateGroups = model.rateGroups;
 
       periods = _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo, model.month, model.year);
-          _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo);
 
       // Установка выбранной даты
       if (model.month != null &&
