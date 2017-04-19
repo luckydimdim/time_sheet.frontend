@@ -145,7 +145,7 @@ class TimeSheetComponent implements OnInit {
       var value = '${fromMonth}.${fromYear}';
       var name = '${_getMonthName(fromMonth)} ${fromYear}';
 
-      if (includeMonth != fromMonth && includeYear != fromYear ) {
+      if (includeMonth != fromMonth || includeYear != fromYear ) {
         result.add(new TimeSheetPeriod(name, value));
       }
 
@@ -169,8 +169,8 @@ class TimeSheetComponent implements OnInit {
 
     //String id = '26270cfa2422b2c4ebf158285e0fb6b6';
 
-    if (ci != null) {
-      String id = ci.component.params['id'];
+    if (ci == null) {
+      String id = '26270cfa2422b2c4ebf158285e12f285';
 
       model = await _service.getTimeSheet(id);
 
