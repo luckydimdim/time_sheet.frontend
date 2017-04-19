@@ -169,8 +169,8 @@ class TimeSheetComponent implements OnInit {
 
     //String id = '26270cfa2422b2c4ebf158285e0fb6b6';
 
-    if (ci == null) {
-      String id = '26270cfa2422b2c4ebf158285e12f285';
+     if (ci != null) {
+      String id = ci.component.params['id'];
 
       model = await _service.getTimeSheet(id);
 
