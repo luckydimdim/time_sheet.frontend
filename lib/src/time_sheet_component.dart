@@ -123,8 +123,10 @@ class TimeSheetComponent implements OnInit {
 
   /**
    * Построить список доступных периодов
+   * Период табеля может отсутствовать в диапазоне доступных для выбора дат, возвращенных с бэкенда (from - to),
+   * поэтому принудительно включаем его (includeMonth + includeYear)
    */
-  List<TimeSheetPeriod> _buildPeriod(DateTime from, DateTime to ) {
+  List<TimeSheetPeriod> _buildPeriod(DateTime from, DateTime to, int includeMonth, int includeYear ) {
     var result = new List<TimeSheetPeriod>();
 
     if (from == null || to == null)
@@ -133,11 +135,18 @@ class TimeSheetComponent implements OnInit {
     int fromMonth = from.month;
     int fromYear = from.year;
 
+    var value = '${includeMonth}.${includeYear}';
+    var name = '${_getMonthName(includeMonth)} ${includeYear}';
+
+    result.add(new TimeSheetPeriod(name, value));
+
     do {
       var value = '${fromMonth}.${fromYear}';
       var name = '${_getMonthName(fromMonth)} ${fromYear}';
 
-      result.add(new TimeSheetPeriod(name, value));
+      if (includeMonth != fromMonth && includeYear != fromYear ) {
+        result.add(new TimeSheetPeriod(name, value));
+      }
 
       if (fromMonth == 12) {
         fromMonth = 1;
@@ -168,7 +177,7 @@ class TimeSheetComponent implements OnInit {
 
       rateGroups = model.rateGroups;
 
-      periods = _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo);
+      periods = _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo, model.month, model.year);
 
       // Установка выбранной даты
       if (model.month != null && model.month != ''
