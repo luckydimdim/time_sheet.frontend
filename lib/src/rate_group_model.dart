@@ -12,6 +12,9 @@ class RateGroupModel extends Object with JsonConverter, MapConverter {
   // Имя группы
   String name = '';
 
+  // Ед. измерения
+  String unitName = '';
+
   // Ставки
   @Json(exclude: true)
   List<RateModel> rates = new List<RateModel>();

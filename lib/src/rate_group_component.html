@@ -9,7 +9,7 @@
     <div class="row" *ngFor="let rate of rateGroup.rates">
 
       <div class="col-md-3 rate_name" #rateCaption>
-        {{ rateGroup.name == null || rateGroup.name.trim() == '' ? '' : rate.name }}
+        {{ rateGroup.name == null || rateGroup.name.trim() == '' ? '' : (rate.name +' (1 = 1 '+ rate.unitName +')' ) }}
       </div>
       <div class="col-md-9 p-0">
         <table class="w-100 font-xxs table-hover">
