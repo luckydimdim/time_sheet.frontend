@@ -2,6 +2,9 @@
 
   <div class="col-md-2 font-weight-bold" [class.rate_name_long]="rateGroup.name == ''">
     {{ rateGroup.name == null || rateGroup.name.trim() == '' ? rateGroup.rates[0].name : rateGroup.name }}
+    <span *ngIf="(rateGroup.name == null || rateGroup.name.trim() == '') && (rateGroup.rates[0].unitName != null && rateGroup.rates[0].unitName.trim() != '')" class="font-xxs text-muted">
+          1 = 1 {{ rateGroup.rates[0].unitName }}
+        </span>
   </div>
 
   <div class="col-md-10 rate">
@@ -9,7 +12,10 @@
     <div class="row" *ngFor="let rate of rateGroup.rates">
 
       <div class="col-md-3 rate_name" #rateCaption>
-        {{ rateGroup.name == null || rateGroup.name.trim() == '' ? '' : (rate.name +' (1 = 1 '+ rate.unitName +')' ) }}
+        {{ rateGroup.name == null || rateGroup.name.trim() == '' ? '' : rate.name }}
+        <span *ngIf="(rateGroup.name != null && rateGroup.name.trim() != '') && (rate.unitName != null && rate.unitName.trim() != '')" class="font-xxs text-muted">
+          1 = 1 {{ rate.unitName }}
+        </span>
       </div>
       <div class="col-md-9 p-0">
         <table class="w-100 font-xxs table-hover">
