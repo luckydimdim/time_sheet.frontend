@@ -16,7 +16,6 @@ import 'package:aside/aside_service.dart';
 import 'package:logger/logger_service.dart';
 
 import 'package:time_sheet/time_sheet_component.dart';
-import 'package:time_sheet/time_sheet_in_memory_data_service.dart';
 
 @Component(
     selector: 'app',
@@ -40,9 +39,6 @@ main() async {
     const Provider(LoggerService),
     const Provider(ConfigService),
     const Provider(AsideService),
-    // provide(Client, useClass: TimeSheetInMemoryDataService)
-    // Using a real back end?
-    // Import browser_client.dart and change the above to:
     provide(Client, useFactory: () => new BrowserClient(), deps: [])
   ]);
 }
