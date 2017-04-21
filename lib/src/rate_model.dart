@@ -12,6 +12,9 @@ class RateModel extends Object with JsonConverter, MapConverter {
   // Имя ставки
   String name = '';
 
+  // Ед. измерения
+  String unitName = '';
+
   // Отработанные часы / дни
   // (порядковый номер элемента массива равняется числу месяца)
   List<num> spentTime = new List<num>();
