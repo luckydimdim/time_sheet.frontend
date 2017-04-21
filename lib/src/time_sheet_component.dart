@@ -70,27 +70,34 @@ class TimeSheetComponent implements OnInit {
     int month = int.parse(monthAndYear.first, onError: (_) => 0);
     int year = int.parse(monthAndYear.last, onError: (_) => 0);
 
-    DateTime newDate = new DateTime(year, month, 1);
-
-    List<DateTime> tempDates = new List<DateTime>();
-
-    for (int dayIndex = 1; dayIndex <= 31; ++dayIndex) {
-      tempDates.add(new DateTime(newDate.year, newDate.month, dayIndex));
-    }
-
-    dates = tempDates;
+    dates = _buildDates(month, year);
 
     // Отправка данных на сервер
     var writeModel = new TimeSheetWriteModel()
       ..id = model.id
-      ..month = newDate.month
-      ..year = newDate.year
+      ..month = month
+      ..year = year
       ..notes = model.notes;
     _service.updateTimeSheet(writeModel);
   }
 
   /**
-   *
+   * Сгенерировать массив дней в указанном месяце и году
+   */
+  List<DateTime> _buildDates( int month, int year) {
+    List<DateTime> result = new List<DateTime>();
+
+    DateTime newDate = new DateTime(year, month, 1);
+
+    for (int dayIndex = 1; dayIndex <= 31; ++dayIndex) {
+      result.add(new DateTime(newDate.year, newDate.month, dayIndex));
+    }
+
+    return result;
+  }
+
+  /**
+   * Получить имя месяца
    */
   String _getMonthName(int month) {
     switch (month) {
@@ -184,7 +191,11 @@ class TimeSheetComponent implements OnInit {
           model.year != null &&
           model.year != '') {
         selectedPeriod = '${model.month}.${model.year}';
+
+        dates = _buildDates(model.month, model.year);
       }
+
+
     }
   }
 
