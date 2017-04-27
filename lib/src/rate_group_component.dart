@@ -2,10 +2,10 @@ import 'package:angular2/angular2.dart';
 import 'package:angular2/core.dart';
 
 import 'package:angular2/src/facade/browser.dart';
+import 'package:angular_utils/cm_spent_time_pipe.dart';
 
 import 'rate_model.dart';
 import 'rate_group_model.dart';
-import 'pipes/cm_spent_time.dart';
 
 @Component(
   selector: 'time-sheet-rate',

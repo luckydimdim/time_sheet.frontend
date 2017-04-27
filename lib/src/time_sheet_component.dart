@@ -4,10 +4,10 @@ import 'package:angular2/core.dart';
 import 'package:angular2/router.dart';
 
 import 'package:angular_utils/directives.dart';
+import 'package:angular_utils/cm_week_day_pipe.dart';
 
 import 'time_sheet_service.dart';
 import 'time_sheet_period.dart';
-import 'pipes/cm_week_day_pipe.dart';
 import 'rate_group_component.dart';
 import 'time_sheet_model.dart';
 import 'rate_group_model.dart';
@@ -102,31 +102,31 @@ class TimeSheetComponent implements OnInit {
   String _getMonthName(int month) {
     switch (month) {
       case DateTime.JANUARY:
-        return "Январь";
+        return 'Январь';
       case DateTime.FEBRUARY:
-        return "Февраль";
+        return 'Февраль';
       case DateTime.MARCH:
-        return "Март";
+        return 'Март';
       case DateTime.APRIL:
-        return "Апрель";
+        return 'Апрель';
       case DateTime.MAY:
-        return "Май";
+        return 'Май';
       case DateTime.JUNE:
-        return "Июнь";
+        return 'Июнь';
       case DateTime.JULY:
-        return "Июль";
+        return 'Июль';
       case DateTime.AUGUST:
-        return "Август";
+        return 'Август';
       case DateTime.SEPTEMBER:
-        return "Сентябрь";
+        return 'Сентябрь';
       case DateTime.OCTOBER:
-        return "Октябрь";
+        return 'Октябрь';
       case DateTime.NOVEMBER:
-        return "Ноябрь";
+        return 'Ноябрь';
       case DateTime.DECEMBER:
-        return "Декабрь";
+        return 'Декабрь';
       default:
-        return "??";
+        return '??';
     }
   }
 
