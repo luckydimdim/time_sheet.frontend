@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart';
 import 'package:angular2/core.dart';
 import 'package:config/config_service.dart';
+import 'package:http_wrapper/http_wrapper.dart';
 import 'package:logger/logger_service.dart';
 
 import 'time_sheet_model.dart';
@@ -15,7 +16,7 @@ import 'rate_model.dart';
  */
 @Injectable()
 class TimeSheetService {
-  final Client _http;
+  final HttpWrapper _http;
   final ConfigService _config;
   LoggerService _logger;
 
@@ -37,7 +38,7 @@ class TimeSheetService {
     } catch (e) {
       _logger.error('Failed to get time sheets: $e');
 
-      throw new Exception('Failed to get time sheets. Cause: $e');
+      rethrow;
     }
 
     _logger.trace('Time sheets requested: $response.');
@@ -68,7 +69,7 @@ class TimeSheetService {
     } catch (e) {
       _logger.error('Failed to get time sheet: $e');
 
-      throw new Exception('Failed to get time sheet. Cause: $e');
+      rethrow;
     }
 
     _logger.trace('Time sheet requested: $response.');
@@ -95,7 +96,7 @@ class TimeSheetService {
     } catch (e) {
       print('Failed to compose request: $e');
 
-      throw new Exception('Failed to compose request. Cause: $e');
+      rethrow;
     }
 
     dynamic json = JSON.decode(response.body);
@@ -120,7 +121,7 @@ class TimeSheetService {
     } catch (e) {
       _logger.error('Failed to update time sheet: $e');
 
-      throw new Exception('Failed to update time sheet. Cause: $e');
+      rethrow;
     }
 
     dynamic json = JSON.decode(response.body);
@@ -141,7 +142,7 @@ class TimeSheetService {
     } catch (e) {
       _logger.error('Failed to remove time sheet: $e');
 
-      throw new Exception('Failed to remove time sheet. Cause: $e');
+      rethrow;
     }
   }
 
@@ -159,7 +160,7 @@ class TimeSheetService {
     } catch (e) {
       _logger.error('Failed to update time sheet spent time: $e');
 
-      throw new Exception('Failed to update time sheet spent time. Cause: $e');
+      rethrow;
     }
   }
 }

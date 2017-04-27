@@ -23,6 +23,8 @@ dependencies:
       git: http://cm-ylng-msk-04/git/config.frontend.git
     converters:
       git: http://cm-ylng-msk-04/git/converters.frontend.git
+    http_wrapper:
+      git: http://cm-ylng-msk-04/git/http_wrapper.frontend.git
 dev_dependencies:
     test: ^0.12.18
     yaml: ^2.1.12
