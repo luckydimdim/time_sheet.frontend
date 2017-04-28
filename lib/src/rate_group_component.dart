@@ -1,7 +1,7 @@
+import 'dart:html';
 import 'package:angular2/angular2.dart';
 import 'package:angular2/core.dart';
 
-import 'package:angular2/src/facade/browser.dart';
 import 'package:angular_utils/cm_spent_time_pipe.dart';
 
 import 'rate_model.dart';
