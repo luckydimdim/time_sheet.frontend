@@ -5,7 +5,7 @@ author: yamal lng
 homepage: http://yamallng.ru/
 
 dependencies:
-    angular2: ^2.2.0
+    angular2: ^3.0.0
     browser: ^0.10.0
     dart_to_js_script_rewriter: ^1.0.2
     http: ^0.11.1
