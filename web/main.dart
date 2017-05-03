@@ -40,6 +40,7 @@ main() async {
     const Provider(LoggerService),
     const Provider(ConfigService),
     const Provider(AsideService),
+  const Provider(AuthorizationService),
     provide(Client, useFactory: () => new BrowserClient(), deps: []),
     provide(HttpWrapper, useFactory: (_http, _authenticationService) => new HttpWrapper(_http, _authenticationService), deps: [Client, AuthenticationService])
   ]);

@@ -174,10 +174,10 @@ class TimeSheetComponent implements OnInit {
   ngOnInit() async {
     Instruction ci = _router.parent?.currentInstruction;
 
-    //String id = '26270cfa2422b2c4ebf158285e1523d3';
+    String id = '26270cfa2422b2c4ebf158285e1523d3';
 
-     if (ci != null) {
-      String id = ci.component.params['id'];
+     if (ci == null) {
+      //String id = ci.component.params['id'];
 
       model = await _service.getTimeSheet(id);
 
