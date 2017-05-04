@@ -7,7 +7,8 @@ import 'package:converters/reflector.dart';
  * Нужна для обощения работы с web-сервисом.
  */
 @reflectable
-abstract class AdditionalDataModelBase extends Object with JsonConverter, MapConverter {
+abstract class AdditionalDataModelBase extends Object
+    with JsonConverter, MapConverter {
   /**
    * Тип модели
    */

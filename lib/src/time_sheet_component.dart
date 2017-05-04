@@ -1,4 +1,4 @@
-﻿import 'package:angular2/angular2.dart';
+import 'package:angular2/angular2.dart';
 import 'package:angular2/core.dart';
 
 import 'package:angular2/router.dart';
@@ -35,6 +35,8 @@ class TimeSheetComponent implements OnInit {
   static const DisplayName = const {
     'displayName': 'Табель учета рабочего времени'
   };
+
+  bool readOnly = true;
 
   final Router _router;
   final TimeSheetService _service;
@@ -84,7 +86,7 @@ class TimeSheetComponent implements OnInit {
   /**
    * Сгенерировать массив дней в указанном месяце и году
    */
-  List<DateTime> _buildDates( int month, int year) {
+  List<DateTime> _buildDates(int month, int year) {
     List<DateTime> result = new List<DateTime>();
 
     DateTime newDate = new DateTime(year, month, 1);
@@ -135,7 +137,8 @@ class TimeSheetComponent implements OnInit {
    * Период табеля может отсутствовать в диапазоне доступных для выбора дат, возвращенных с бэкенда (from - to),
    * поэтому принудительно включаем его (includeMonth + includeYear)
    */
-  List<TimeSheetPeriod> _buildPeriod(DateTime from, DateTime to, int includeMonth, int includeYear ) {
+  List<TimeSheetPeriod> _buildPeriod(
+      DateTime from, DateTime to, int includeMonth, int includeYear) {
     var result = new List<TimeSheetPeriod>();
 
     if (from == null || to == null) return result;
@@ -152,7 +155,7 @@ class TimeSheetComponent implements OnInit {
       var value = '${fromMonth}.${fromYear}';
       var name = '${_getMonthName(fromMonth)} ${fromYear}';
 
-      if (includeMonth != fromMonth || includeYear != fromYear ) {
+      if (includeMonth != fromMonth || includeYear != fromYear) {
         result.add(new TimeSheetPeriod(name, value));
       }
 
@@ -184,7 +187,8 @@ class TimeSheetComponent implements OnInit {
 
       rateGroups = model.rateGroups;
 
-      periods = _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo, model.month, model.year);
+      periods = _buildPeriod(model.availablePeriodsFrom,
+          model.availablePeriodsTo, model.month, model.year);
 
       // Установка выбранной даты
       if (model.month != null &&
@@ -195,8 +199,14 @@ class TimeSheetComponent implements OnInit {
 
         dates = _buildDates(model.month, model.year);
       }
+      String statusSysName = model.statusSysName.toUpperCase();
 
-
+      if (statusSysName == 'DONE' || statusSysName == 'CREATED' || statusSysName == 'VALIDATION' ) {
+        readOnly = true;
+      }
+      else {
+        readOnly = false;
+      }
     }
   }
 

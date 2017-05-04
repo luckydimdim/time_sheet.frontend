@@ -8,15 +8,18 @@ import 'rate_model.dart';
 import 'rate_group_model.dart';
 
 @Component(
-  selector: 'time-sheet-rate',
-  templateUrl: 'rate_group_component.html',
-  pipes: const [CmSpentTimePipe])
+    selector: 'time-sheet-rate',
+    templateUrl: 'rate_group_component.html',
+    pipes: const [CmSpentTimePipe])
 class TimeSheetRateComponent {
   @Input()
   List<DateTime> dates = null;
 
   @Input()
   RateGroupModel rateGroup = null;
+
+  @Input()
+  bool readOnly = true;
 
   @Output()
   /**
@@ -30,12 +33,14 @@ class TimeSheetRateComponent {
   void add(MouseEvent e, String id, int dayIndex) {
     e.preventDefault();
 
+    if (readOnly)
+      return;
+
     RateModel rate = rateGroup.rates.firstWhere((item) => item.id == id);
 
     _normalizeSpentTimeLength(rate);
 
-    if (rate.spentTime[dayIndex] >= 99)
-      return;
+    if (rate.spentTime[dayIndex] >= 99) return;
 
     rate.spentTime[dayIndex] = rate.spentTime[dayIndex] + 1;
 
@@ -48,10 +53,12 @@ class TimeSheetRateComponent {
   void substract(MouseEvent e, String id, int dayIndex) {
     e.preventDefault();
 
+    if (readOnly)
+      return;
+
     RateModel rate = rateGroup.rates.firstWhere((item) => item.id == id);
 
-    if (rate.spentTime[dayIndex] <= 0)
-      return;
+    if (rate.spentTime[dayIndex] <= 0) return;
 
     rate.spentTime[dayIndex] = rate.spentTime[dayIndex] - 0.5;
 

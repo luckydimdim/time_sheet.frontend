@@ -28,13 +28,14 @@ class TimeSheetService {
    * Получение списка time sheet'ов
    */
   Future<List<TimeSheetModel>> getTimeSheets() async {
-    _logger.trace('Getting time sheets. Url: ${ _config.helper.timeSheetsUrl }');
+    _logger
+        .trace('Getting time sheets. Url: ${ _config.helper.timeSheetsUrl }');
 
     Response response = null;
 
     try {
       response = await _http.get(_config.helper.timeSheetsUrl,
-        headers: {'Content-Type': 'application/json'});
+          headers: {'Content-Type': 'application/json'});
     } catch (e) {
       _logger.error('Failed to get time sheets: $e');
 
@@ -61,11 +62,12 @@ class TimeSheetService {
   Future<TimeSheetModel> getTimeSheet(String id) async {
     Response response = null;
 
-    _logger.trace('Getting time sheet. Url: ${ _config.helper.timeSheetsUrl }/$id');
+    _logger.trace(
+        'Getting time sheet. Url: ${ _config.helper.timeSheetsUrl }/$id');
 
     try {
       response = await _http.get('${ _config.helper.timeSheetsUrl }/$id',
-        headers: {'Content-Type': 'application/json'});
+          headers: {'Content-Type': 'application/json'});
     } catch (e) {
       _logger.error('Failed to get time sheet: $e');
 
@@ -89,8 +91,8 @@ class TimeSheetService {
 
     try {
       response = await _http.post(_config.helper.timeSheetsUrl,
-        body: model.toJsonString(),
-        headers: {'Content-Type': 'application/json'});
+          body: model.toJsonString(),
+          headers: {'Content-Type': 'application/json'});
 
       _logger.trace('Time sheet created');
     } catch (e) {
@@ -114,9 +116,9 @@ class TimeSheetService {
 
     try {
       response = await _http.put(
-        '${ _config.helper.timeSheetsUrl }/${ model.id }',
-        body: model.toJsonString(),
-        headers: {'Content-Type': 'application/json'});
+          '${ _config.helper.timeSheetsUrl }/${ model.id }',
+          body: model.toJsonString(),
+          headers: {'Content-Type': 'application/json'});
       _logger.trace('Time sheet ${ model.id } successfuly updated');
     } catch (e) {
       _logger.error('Failed to update time sheet: $e');
@@ -133,11 +135,12 @@ class TimeSheetService {
    * Удаление time sheet'a
    */
   deleteRequest(String id) async {
-    _logger.trace('Removing time sheet. Url: ${ _config.helper.timeSheetsUrl }/$id');
+    _logger.trace(
+        'Removing time sheet. Url: ${ _config.helper.timeSheetsUrl }/$id');
 
     try {
       await _http.delete('${ _config.helper.timeSheetsUrl }/$id',
-        headers: {'Content-Type': 'application/json'});
+          headers: {'Content-Type': 'application/json'});
       _logger.trace('Time sheet $id removed');
     } catch (e) {
       _logger.error('Failed to remove time sheet: $e');
@@ -150,12 +153,13 @@ class TimeSheetService {
    * Обновление отработанного времени
    */
   updateSpentTime(String id, RateModel model) async {
-    _logger.trace('Updating spent time. Url: ${ _config.helper.timeSheetsUrl }/$id/spent-time');
+    _logger.trace(
+        'Updating spent time. Url: ${ _config.helper.timeSheetsUrl }/$id/spent-time');
 
     try {
       await _http.put('${ _config.helper.timeSheetsUrl }/$id/spent-time',
-        headers: {'Content-Type': 'application/json'},
-        body: model.toJsonString());
+          headers: {'Content-Type': 'application/json'},
+          body: model.toJsonString());
       _logger.trace('Time sheet spent time successfuly updated');
     } catch (e) {
       _logger.error('Failed to update time sheet spent time: $e');

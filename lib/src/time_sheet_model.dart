@@ -48,7 +48,10 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
   AdditionalDataModelBase additionalData = null;
 
   // предупреждения
-  List<String> warning= new List<String>();
+  List<String> warning = new List<String>();
+
+  // системное имя статуса
+  String statusSysName = '';
 
   @override
   dynamic fromJson(dynamic json) {
@@ -73,8 +76,7 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
    * Фабричный метод
    */
   AdditionalDataModelBase _createAdditionalData(dynamic json) {
-    if (json == null)
-      return null;
+    if (json == null) return null;
 
     AdditionalDataModelBase result;
 
