@@ -36,6 +36,9 @@ class TimeSheetComponent implements OnInit {
     'displayName': 'Табель учета рабочего времени'
   };
 
+  @Input()
+  String timeSheetId = null;
+
   bool readOnly = true;
 
   final Router _router;
@@ -175,38 +178,44 @@ class TimeSheetComponent implements OnInit {
    * Загрузка time sheet'a с сервера
    */
   ngOnInit() async {
-    Instruction ci = _router.parent?.currentInstruction;
 
     // Просьба здесь не использовать подмену ID, т.к. часто этот код попадает в основной репозиторий
-    // Предлагаю использовать main.dart
+    // Предлагаю использовать main.dart и input - timeSheetId
 
-    if (ci != null) {
-      String id = ci.component.params['id'];
+    if (timeSheetId == null) {
 
-      model = await _service.getTimeSheet(id);
+      // в Input не передали. Пробуем вытащить из url
+      Instruction ci = _router.parent?.currentInstruction;
 
-      rateGroups = model.rateGroups;
+      if (ci == null) return;
 
-      periods = _buildPeriod(model.availablePeriodsFrom,
-          model.availablePeriodsTo, model.month, model.year);
+      timeSheetId = ci.component.params['id'];
+    }
 
-      // Установка выбранной даты
-      if (model.month != null &&
-          model.month != '' &&
-          model.year != null &&
-          model.year != '') {
-        selectedPeriod = '${model.month}.${model.year}';
+    model = await _service.getTimeSheet(timeSheetId);
 
-        dates = _buildDates(model.month, model.year);
-      }
-      String statusSysName = model.statusSysName.toUpperCase();
+    rateGroups = model.rateGroups;
 
-      if (statusSysName == 'DONE' || statusSysName == 'CREATED' || statusSysName == 'VALIDATION' ) {
-        readOnly = true;
-      }
-      else {
-        readOnly = false;
-      }
+    periods = _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo,
+        model.month, model.year);
+
+    // Установка выбранной даты
+    if (model.month != null &&
+        model.month != '' &&
+        model.year != null &&
+        model.year != '') {
+      selectedPeriod = '${model.month}.${model.year}';
+
+      dates = _buildDates(model.month, model.year);
+    }
+    String statusSysName = model.statusSysName.toUpperCase();
+
+    if (statusSysName == 'DONE' ||
+        statusSysName == 'CREATED' ||
+        statusSysName == 'VALIDATION') {
+      readOnly = true;
+    } else {
+      readOnly = false;
     }
   }
 

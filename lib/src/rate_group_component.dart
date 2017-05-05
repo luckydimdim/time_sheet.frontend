@@ -33,8 +33,7 @@ class TimeSheetRateComponent {
   void add(MouseEvent e, String id, int dayIndex) {
     e.preventDefault();
 
-    if (readOnly)
-      return;
+    if (readOnly) return;
 
     RateModel rate = rateGroup.rates.firstWhere((item) => item.id == id);
 
@@ -53,8 +52,7 @@ class TimeSheetRateComponent {
   void substract(MouseEvent e, String id, int dayIndex) {
     e.preventDefault();
 
-    if (readOnly)
-      return;
+    if (readOnly) return;
 
     RateModel rate = rateGroup.rates.firstWhere((item) => item.id == id);
 

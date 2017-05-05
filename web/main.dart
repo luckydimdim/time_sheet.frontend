@@ -5,6 +5,7 @@ import 'package:angular2/core.dart';
 import 'package:angular2/router.dart';
 import 'package:angular2/platform/common.dart';
 
+import 'package:contracts/contracts_service.dart';
 import 'package:http/http.dart';
 import 'package:http/browser_client.dart';
 import 'package:http_wrapper/http_wrapper.dart';
@@ -20,7 +21,7 @@ import 'package:time_sheet/time_sheet_component.dart';
 
 @Component(
     selector: 'app',
-    template: '<master-layout><time-sheet></time-sheet></master-layout>',
+    template: '<master-layout><time-sheet [timeSheetId]="\'26270cfa2422b2c4ebf158285e17cb17\'"></time-sheet></master-layout>',
     providers: const [
       ROUTER_PROVIDERS,
       const Provider(LocationStrategy, useClass: HashLocationStrategy)
@@ -36,11 +37,13 @@ main() async {
     ROUTER_PROVIDERS,
     const Provider(LocationStrategy, useClass: HashLocationStrategy),
     const Provider(AlertService),
-    const Provider(AuthenticationService),
+    const Provider(AsideService),
     const Provider(LoggerService),
     const Provider(ConfigService),
-    const Provider(AsideService),
+    const Provider(AuthenticationService),
     const Provider(AuthorizationService),
+    const Provider(ContractsService),
+
     provide(Client, useFactory: () => new BrowserClient(), deps: []),
     provide(HttpWrapper,
         useFactory: (_http, _authenticationService) =>

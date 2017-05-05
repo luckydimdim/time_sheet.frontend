@@ -42,5 +42,5 @@ class AdditionalDataSouthTambeyModel extends AdditionalDataModelBase {
   /**
    * Дата мобилизации
    */
-  String mobDate = '';
+  DateTime mobDate;
 }
