@@ -50,7 +50,7 @@
       </li>
       <li>
         <span>Дата мобилизации</span>
-        <span>{{ model.mobDate == null || model.mobDate.trim() == '' ? 'н/д' : model.mobDate }}</span>
+        <span>{{ model.mobDate == null || model.mobDate.trim() == '' ? 'н/д' : (model.mobDate  | date:'dd.MM.yyyy') }}</span>
       </li>
     </ul>
 
