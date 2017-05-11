@@ -6,6 +6,7 @@ import 'package:angular2/router.dart';
 import 'package:angular_utils/directives.dart';
 import 'package:angular_utils/cm_week_day_pipe.dart';
 
+import 'package:auth/auth_service.dart';
 import 'time_sheet_service.dart';
 import 'time_sheet_period.dart';
 import 'rate_group_component.dart';
@@ -40,9 +41,11 @@ class TimeSheetComponent implements OnInit {
   String timeSheetId = null;
 
   bool readOnly = true;
+  String statusSysName = '';
 
   final Router _router;
   final TimeSheetService _service;
+  final AuthorizationService _authorizationService;
 
   // Ставки и отработанное время, загруженные с сервера
   List<RateGroupModel> rateGroups = new List<RateGroupModel>();
@@ -57,7 +60,7 @@ class TimeSheetComponent implements OnInit {
   // Модель time sheet'a
   TimeSheetModel model = new TimeSheetModel();
 
-  TimeSheetComponent(this._service, this._router) {
+  TimeSheetComponent(this._service, this._router, this._authorizationService) {
     // Первоначальная установка даты
     DateTime now = new DateTime.now();
 
@@ -178,12 +181,14 @@ class TimeSheetComponent implements OnInit {
    * Загрузка time sheet'a с сервера
    */
   ngOnInit() async {
+    await _loadData();
+  }
 
+  _loadData() async {
     // Просьба здесь не использовать подмену ID, т.к. часто этот код попадает в основной репозиторий
     // Предлагаю использовать main.dart и input - timeSheetId
 
     if (timeSheetId == null) {
-
       // в Input не передали. Пробуем вытащить из url
       Instruction ci = _router.parent?.currentInstruction;
 
@@ -208,11 +213,13 @@ class TimeSheetComponent implements OnInit {
 
       dates = _buildDates(model.month, model.year);
     }
-    String statusSysName = model.statusSysName.toUpperCase();
 
-    if (statusSysName == 'DONE' ||
+    statusSysName = model.statusSysName.toUpperCase();
+
+    if (statusSysName == 'APPROVED' ||
+        statusSysName == 'APPROVING' ||
         statusSysName == 'CREATED' ||
-        statusSysName == 'VALIDATION') {
+        statusSysName == 'CORRECTED') {
       readOnly = true;
     } else {
       readOnly = false;
@@ -234,4 +241,112 @@ class TimeSheetComponent implements OnInit {
         'ng-valid': control.valid ?? false,
         'ng-invalid': control.valid == false
       };
+
+  /**
+   * Завершить редактирование
+   */
+  complete() async {
+    try {
+      if (statusSysName == 'EMPTY' || statusSysName == 'CREATING')
+        await _service.updateStatus(model.id, 'CREATED');
+      else if (statusSysName == 'CORRECTING')
+        await _service.updateStatus(model.id, 'CORRECTED');
+      else
+        throw new Exception('incorrect status: $statusSysName');
+    } catch (e) {
+      await _loadData();
+
+      rethrow;
+    }
+    _router.navigate(['../RequestView']);
+  }
+
+  /**
+   * Редактировать
+   */
+  edit() async {
+    try {
+      if (statusSysName == 'CREATED')
+        await _service.updateStatus(model.id, 'CREATING');
+      else if (statusSysName == 'CORRECTED')
+        await _service.updateStatus(model.id, 'CORRECTING');
+      else
+        throw new Exception('incorrect status: $statusSysName');
+    } catch (e) {
+      await _loadData();
+      rethrow;
+    }
+
+    await _loadData();
+  }
+
+  /**
+   * Отправить на исправление
+   */
+  correct() async {
+    try {
+      if (statusSysName == 'APPROVING')
+        await _service.updateStatus(model.id, 'CORRECTING');
+      else
+        throw new Exception('incorrect status: $statusSysName');
+    } catch (e) {
+      await _loadData();
+      rethrow;
+    }
+
+    _router.navigate(['../RequestView']);
+  }
+
+  /**
+   * Одобрить табель
+   */
+  approve() async {
+    try {
+      if (statusSysName == 'APPROVING')
+        await _service.updateStatus(model.id, 'APPROVED');
+      else
+        throw new Exception('incorrect status: $statusSysName');
+    } catch (e) {
+      await _loadData();
+      rethrow;
+    }
+
+    _router.navigate(['../RequestView']);
+  }
+
+  /**
+   * Подставляет нужный css класс в столбце со статусами
+   */
+  Map<String, bool> resolveStatusStyleClass(String statusSysName) {
+    Map<String, bool> result = new Map<String, bool>();
+
+    String status = statusSysName.toUpperCase();
+
+    switch (status) {
+      case 'EMPTY':
+        result['tag-default'] = true;
+        break;
+      case 'CREATED':
+      case 'CORRECTED':
+        result['tag-primary'] = true;
+        break;
+      case 'APPROVING':
+        result['tag-warning'] = true;
+        break;
+      case 'APPROVED':
+        result['tag-success'] = true;
+        break;
+      case 'CORRECTING':
+        result['tag-danger'] = true;
+        break;
+      default:
+        result['tag-info'] = true;
+    }
+
+    return result;
+  }
+
+  bool isCustomer() {
+    return _authorizationService.isInRole(Role.Customer);
+  }
 }

@@ -50,6 +50,9 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
   // предупреждения
   List<String> warning = new List<String>();
 
+  // Статус табеля
+  String statusName = '';
+
   // системное имя статуса
   String statusSysName = '';
 

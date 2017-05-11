@@ -167,4 +167,23 @@ class TimeSheetService {
       rethrow;
     }
   }
+
+  /**
+   * Смена статуса
+   */
+  updateStatus(String id, String status) async {
+    _logger.trace(
+        'Updating status. Url: ${ _config.helper.timeSheetsUrl }/$id/status');
+
+    try {
+      await _http.put('${ _config.helper.timeSheetsUrl }/$id/status',
+          headers: {'Content-Type': 'application/json'},
+          body: '{"Status":"$status"}');
+      _logger.trace('Time sheet status successfuly updated');
+    } catch (e) {
+      _logger.error('Failed to update time sheet status: $e');
+
+      rethrow;
+    }
+  }
 }

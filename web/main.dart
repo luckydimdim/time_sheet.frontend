@@ -21,7 +21,8 @@ import 'package:time_sheet/time_sheet_component.dart';
 
 @Component(
     selector: 'app',
-    template: '<master-layout><time-sheet [timeSheetId]="\'26270cfa2422b2c4ebf158285e17cb17\'"></time-sheet></master-layout>',
+    template:
+        '<master-layout><time-sheet [timeSheetId]="\'26270cfa2422b2c4ebf158285e17cb17\'"></time-sheet></master-layout>',
     providers: const [
       ROUTER_PROVIDERS,
       const Provider(LocationStrategy, useClass: HashLocationStrategy)
@@ -43,7 +44,6 @@ main() async {
     const Provider(AuthenticationService),
     const Provider(AuthorizationService),
     const Provider(ContractsService),
-
     provide(Client, useFactory: () => new BrowserClient(), deps: []),
     provide(HttpWrapper,
         useFactory: (_http, _authenticationService) =>

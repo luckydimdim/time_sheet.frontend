@@ -6,8 +6,28 @@
       <div class="card">
         <div class="card-header">
           <i class="fa fa-clock-o"></i>Ежемесячный табель учета рабочего времени
-          <a href="#" [cmRouterLink]="['../RequestView']" class="btn btn-sm btn-success float-xs-right ml-1"><i class="fa fa-check-circle"></i> Завершить</a>
-          <a href="#" [cmRouterLink]="['../RequestView']" class="btn btn-sm btn-info float-xs-right"><i class="fa fa-save"></i> Отложить</a>
+          <span class="tag tag-pill" [ngClass]="resolveStatusStyleClass(model.statusSysName)">{{ model.statusName }}</span>
+          <button *ngIf="statusSysName=='EMPTY' || statusSysName=='CREATING' || statusSysName=='CORRECTING'" type="button" class="btn btn-sm btn-outline-success ml-1 float-xs-right" (click)="complete()">
+            <i class="fa fa-check-circle"></i>
+            &nbsp; Завершить
+          </button>
+  
+          <button *ngIf="statusSysName=='CREATED' || statusSysName=='CORRECTED'" type="button" class="btn btn-sm btn-outline-success ml-1 float-xs-right" (click)="edit()">
+            <i class="fa fa-check-circle"></i>
+            &nbsp; Редактировать
+          </button>
+  
+          <button *ngIf="statusSysName=='APPROVING' && isCustomer()" type="button" class="btn btn-sm btn-danger ml-1 float-xs-right" (click)="correct()">
+            <i class="fa fa fa-exclamation"></i>
+            &nbsp; На исправление
+          </button>
+          
+          <button *ngIf="statusSysName=='APPROVING' && isCustomer()" type="button" class="btn btn-sm btn-success ml-1 float-xs-right" (click)="approve()">
+            <i class="fa fa-check-square-o"></i>
+            &nbsp; Одобрить
+          </button>
+          
+          <a href="#" [cmRouterLink]="['../RequestView']" class="btn btn-sm btn-primary float-xs-right"><i class="icon-action-undo"></i> Назад</a>
         </div>
         <div class="card-block">
           <form (change)="updateModel(timeSheetForm.value)" #timeSheetForm="ngForm">
