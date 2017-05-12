@@ -5,6 +5,7 @@ import 'package:http/http.dart';
 import 'package:angular2/core.dart';
 import 'package:config/config_service.dart';
 import 'package:http_wrapper/http_wrapper.dart';
+import 'package:http_wrapper/exceptions.dart';
 import 'package:logger/logger_service.dart';
 
 import 'time_sheet_model.dart';
@@ -161,7 +162,12 @@ class TimeSheetService {
           headers: {'Content-Type': 'application/json'},
           body: model.toJsonString());
       _logger.trace('Time sheet spent time successfuly updated');
-    } catch (e) {
+    }
+    on ConflictError catch (e) {
+      // FIXME: обрабатывать данную ситуацию
+      _logger.warning('conflict while updating spent time... ');
+    }
+    catch (e) {
       _logger.error('Failed to update time sheet spent time: $e');
 
       rethrow;
