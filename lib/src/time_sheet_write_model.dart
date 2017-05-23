@@ -10,11 +10,11 @@ class TimeSheetWriteModel extends Object with JsonConverter, MapConverter {
   // Внутренний id
   String id = '';
 
-  // Месяц
-  int month = 0;
+  // с
+  DateTime from = null;
 
-  // Год
-  int year = 0;
+  // по
+  DateTime till = null;
 
   // Примечания
   String notes = '';

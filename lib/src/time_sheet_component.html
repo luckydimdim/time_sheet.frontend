@@ -3,7 +3,7 @@
 
     <div class="col-md-12">
 
-      <div class="card">
+      <div *ngIf="model != null"  class="card">
         <div class="card-header">
           <i class="fa fa-clock-o"></i>Ежемесячный табель учета рабочего времени
           <span class="tag tag-pill" [ngClass]="resolveStatusStyleClass(model.statusSysName)">{{ model.statusName }}</span>
@@ -30,7 +30,7 @@
           <a href="#" [cmRouterLink]="['../RequestView']" class="btn btn-sm btn-primary float-xs-right"><i class="icon-action-undo"></i> Назад</a>
         </div>
         <div class="card-block">
-          <form (change)="updateModel(timeSheetForm.value)" #timeSheetForm="ngForm">
+          <form (change)="updateModel()" #timeSheetForm="ngForm">
 
             <div class="row">
 
@@ -49,14 +49,23 @@
               <!-- /col -->
 
               <div class="col-md-2 float-md-right">
-                <label for="time-sheet-month">Месяц</label>
-                <select class="form-control" id="time-sheet-month"
-                  [disabled]="readOnly"
-                  [(ngModel)]="selectedPeriod"
-                  ngControl="period">
-
-                  <option *ngFor="let period of periods" [value]="period.value">{{ period.name }}</option>
-                </select>
+                <label for="time-sheet-month">Период</label>
+                <input daterangepicker type="text" class="form-control"
+                       id="time-sheet-dates"
+                       placeholder=""
+                       [options]="dateRangePickerOptions"
+                       (selected)="datesSelected($event)"
+                       [disabled]="readOnly"
+                       #timeSheetDates
+                       #timeSheetDatesControl="ngForm"
+                       [ngClass]="controlStateClasses(timeSheetDatesControl)"
+                       required
+                       maxlength="255"
+                       [class.form-control-danger]="!timeSheetDatesControl.valid && (timeSheetDatesControl.dirty || timeSheetDatesControl.touched)"
+                       [class.form-control-success]="timeSheetDatesControl.valid && timeSheetDatesControl.touched"
+                       [ngModel]="getDates()"
+                       [value]="getDates()"
+                       ngControl="timeSheetDates" />
               </div>
               <!-- /col -->
 
@@ -77,16 +86,16 @@
                   <div class="col-md-9 p-0">
                     <table class="w-100">
                       <tr class="font-weight-bold">
-                        <td *ngFor="let date of dates; let dateIndex = index"
+                        <td *ngFor="let date of dates"
                             [class.table-success]="date.weekday == 6 || date.weekday == 7"
-                            [class.text-muted]="date.day != dateIndex + 1">{{ dateIndex + 1 }}
+                            [class.text-muted]="!inPeriod(date)">{{ date.day }}
                         </td>
                         <td class="table-warning rate_total_caption" rowspan="2">Итого</td>
                       </tr>
                       <tr class="font-xs rate_day_names">
-                        <td *ngFor="let date of dates; let dateIndex = index"
+                        <td *ngFor="let date of dates"
                             [class.table-success]="date.weekday == 6 || date.weekday == 7"
-                            [class.text-muted]="date.day != dateIndex + 1">{{ date.weekday | cmWeekDay }}
+                            [class.text-muted]="!inPeriod(date)">{{ date.weekday | cmWeekDay }}
                         </td>
                       </tr>
                     </table>
@@ -107,7 +116,12 @@
               *ngFor="let rateGroup of rateGroups"
               [rateGroup]="rateGroup"
               [readOnly]="readOnly"
-              (updateSpentTime)="updateSpentTime($event)"></time-sheet-rate>
+              (updateSpentTime)="updateSpentTime($event)"
+              [from]="model.from"
+              [till]="model.till"
+            >
+            
+            </time-sheet-rate>
 
             <div class="row mt-2">
               <div class="col-md-5">

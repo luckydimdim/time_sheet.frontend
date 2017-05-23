@@ -2,6 +2,8 @@ import 'package:converters/json_converter.dart';
 import 'package:converters/map_converter.dart';
 import 'package:converters/reflector.dart';
 
+import 'package:intl/intl.dart';
+
 import 'additional_data/additional_data_model_base.dart';
 import 'additional_data/additional_data_default_model.dart';
 import 'additional_data/additional_data_south_tambey_model.dart';
@@ -18,11 +20,21 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
   // id наряд-заказа
   String callOffOrderId = '';
 
-  // Месяц
-  int month = 0;
+  // Период - начало
+  DateTime from = null;
+  String get fromStr => from == null ? '' : formatter.format(from);
 
-  // Год
-  int year = 0;
+  // Период - окончание
+  DateTime till = null;
+  String get tillStr => till == null ? '' : formatter.format(till);
+
+  // Наряд заказ - нача
+  DateTime callOffOrderStartDate;
+  String get callOffOrderStartDateStr => callOffOrderStartDate == null ? '' : formatter.format(callOffOrderStartDate);
+
+  // Наряд заказ - окончание
+  DateTime callOffOrderFinishDate;
+  String get callOffOrderFinishDateStr => callOffOrderFinishDate == null ? '' : formatter.format(callOffOrderFinishDate);
 
   // Дата создания
   DateTime createdAt = null;
@@ -56,6 +68,9 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
   // системное имя статуса
   String statusSysName = '';
 
+  @Json(exclude: true)
+  DateFormat formatter = new DateFormat('dd.MM.yyyy');
+
   @override
   dynamic fromJson(dynamic json) {
     super.fromJson(json);
@@ -68,12 +83,6 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
 
     return this;
   }
-
-  // Начало доступных периодов
-  DateTime availablePeriodsFrom = null;
-
-  // Окончание доступных периодов
-  DateTime availablePeriodsTo = null;
 
   /**
    * Фабричный метод

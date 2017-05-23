@@ -127,9 +127,6 @@ class TimeSheetService {
       rethrow;
     }
 
-    dynamic json = JSON.decode(response.body);
-
-    return new TimeSheetWriteModel().fromJson(json);
   }
 
   /**

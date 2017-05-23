@@ -1,5 +1,7 @@
 import 'package:angular2/angular2.dart';
 import 'package:angular2/core.dart';
+import 'dart:async';
+import 'dart:html';
 
 import 'package:angular2/router.dart';
 
@@ -16,6 +18,8 @@ import 'rate_model.dart';
 import 'additional_data/additional_data_default_component.dart';
 import 'additional_data/additional_data_south_tambey_component.dart';
 import 'time_sheet_write_model.dart';
+import 'package:daterangepicker/daterangepicker.dart';
+import 'package:daterangepicker/daterangepicker_directive.dart';
 
 @Component(
     selector: 'time-sheet',
@@ -24,7 +28,8 @@ import 'time_sheet_write_model.dart';
       TimeSheetRateComponent,
       AdditionalDataDefaultComponent,
       AdditionalDataSouthTambeyComponent,
-      CmRouterLink
+      CmRouterLink,
+      DateRangePickerDirective
     ],
     providers: const [
       TimeSheetService
@@ -37,8 +42,13 @@ class TimeSheetComponent implements OnInit {
     'displayName': 'Табель учета рабочего времени'
   };
 
+  DateRangePickerOptions dateRangePickerOptions = new DateRangePickerOptions();
+
   @Input()
   String timeSheetId = null;
+
+  @ViewChild(DateRangePickerDirective)
+  DateRangePickerDirective periodControl;
 
   bool readOnly = true;
   String statusSysName = '';
@@ -53,12 +63,8 @@ class TimeSheetComponent implements OnInit {
   // Набор дат для таблицы
   List<DateTime> dates = new List<DateTime>();
 
-  // Выбранный месяц и год
-  String selectedPeriod = '';
-  List<TimeSheetPeriod> periods = new List<TimeSheetPeriod>();
-
   // Модель time sheet'a
-  TimeSheetModel model = new TimeSheetModel();
+  TimeSheetModel model;
 
   TimeSheetComponent(this._service, this._router, this._authorizationService) {
     // Первоначальная установка даты
@@ -67,41 +73,110 @@ class TimeSheetComponent implements OnInit {
     for (int dayIndex = 1; dayIndex <= 31; ++dayIndex) {
       dates.add(new DateTime(now.year, now.month, dayIndex));
     }
+
+    var locale = new DateRangePickerLocale()
+      ..format = 'DD.MM.YYYY'
+      ..separator = ' - '
+      ..applyLabel = 'Применить'
+      ..cancelLabel = 'Отменить'
+      ..fromLabel = 'С'
+      ..toLabel = 'По'
+      ..customRangeLabel = 'Custom'
+      ..weekLabel = 'W'
+      ..firstDay = 1
+      ..daysOfWeek = ['Вс', 'Пн', 'Вт', 'Ср', 'Чт', 'Пт', 'Сб']
+      ..monthNames = [
+        'Январь',
+        'Февраль',
+        'Март',
+        'Апрель',
+        'Май',
+        'Июнь',
+        'Июль',
+        'Август',
+        'Сентябрь',
+        'Октябрь',
+        'Ноябрь',
+        'Декабрь'
+      ];
+
+    dateRangePickerOptions = new DateRangePickerOptions()
+      ..locale = locale
+      ..dateLimit = new DateLimit(days: 30)
+      ..opens = 'left';
   }
 
   /**
-   * Выбор даты из списка
+   * Обновление сроков
    */
-  void updateModel(dynamic formValues) {
-    List<String> monthAndYear = formValues['period'].split('.');
+  Future datesSelected(Map<String, DateTime> value) async {
 
-    int month = int.parse(monthAndYear.first, onError: (_) => 0);
-    int year = int.parse(monthAndYear.last, onError: (_) => 0);
+    bool filled = false;
+    model.rateGroups.forEach((rg) {
+      rg.rates.forEach((r){
+        if (r.spentTime.any((t) => t > 0)) {
+          filled = true;
+        }
+      });
+    });
 
-    dates = _buildDates(month, year);
+    model.from = value['start'];
+    model.till = value['end'];
+
+    // Установка выбранной даты
+    if (model.from != null && model.till != null) {
+      dates = _buildDates(model.from, model.till);
+    }
+
+    await updateModel();
+
+    await _loadData();
+  }
+
+  /**
+   *
+   */
+  Future updateModel() async {
 
     // Отправка данных на сервер
     var writeModel = new TimeSheetWriteModel()
       ..id = model.id
-      ..month = month
-      ..year = year
+      ..from = model.from
+      ..till = model.till
       ..notes = model.notes;
-    _service.updateTimeSheet(writeModel);
+
+    await _service.updateTimeSheet(writeModel);
   }
 
   /**
    * Сгенерировать массив дней в указанном месяце и году
    */
-  List<DateTime> _buildDates(int month, int year) {
+  List<DateTime> _buildDates(DateTime from, DateTime till) {
     List<DateTime> result = new List<DateTime>();
 
-    DateTime newDate = new DateTime(year, month, 1);
+   var fromTmp = new DateTime(from.year, from.month, from.day);
 
-    for (int dayIndex = 1; dayIndex <= 31; ++dayIndex) {
-      result.add(new DateTime(newDate.year, newDate.month, dayIndex));
-    }
+   for (int i = 1; i <= 31; i++) {
+     result.add(fromTmp);
+     fromTmp =  fromTmp.add(new Duration(days: 1));
+   }
 
     return result;
+  }
+
+  /**
+   * Проверяет попадание указанного дня в период табеля
+   */
+  bool inPeriod(DateTime day) {
+
+    if (model.from == null || model.till == null)
+      return false;
+
+    if (day.compareTo(model.from) >= 0 && day.compareTo(model.till) <= 0)
+      return true;
+
+    return false;
+
   }
 
   /**
@@ -138,44 +213,6 @@ class TimeSheetComponent implements OnInit {
     }
   }
 
-  /**
-   * Построить список доступных периодов
-   * Период табеля может отсутствовать в диапазоне доступных для выбора дат, возвращенных с бэкенда (from - to),
-   * поэтому принудительно включаем его (includeMonth + includeYear)
-   */
-  List<TimeSheetPeriod> _buildPeriod(
-      DateTime from, DateTime to, int includeMonth, int includeYear) {
-    var result = new List<TimeSheetPeriod>();
-
-    if (from == null || to == null) return result;
-
-    int fromMonth = from.month;
-    int fromYear = from.year;
-
-    var value = '${includeMonth}.${includeYear}';
-    var name = '${_getMonthName(includeMonth)} ${includeYear}';
-
-    result.add(new TimeSheetPeriod(name, value));
-
-    do {
-      var value = '${fromMonth}.${fromYear}';
-      var name = '${_getMonthName(fromMonth)} ${fromYear}';
-
-      if (includeMonth != fromMonth || includeYear != fromYear) {
-        result.add(new TimeSheetPeriod(name, value));
-      }
-
-      if (fromMonth == 12) {
-        fromMonth = 1;
-        fromYear++;
-      } else {
-        fromMonth++;
-      }
-    } while (fromYear <= to.year && fromMonth <= to.month);
-
-    return result;
-  }
-
   @override
   /**
    * Загрузка time sheet'a с сервера
@@ -201,17 +238,9 @@ class TimeSheetComponent implements OnInit {
 
     rateGroups = model.rateGroups;
 
-    periods = _buildPeriod(model.availablePeriodsFrom, model.availablePeriodsTo,
-        model.month, model.year);
-
     // Установка выбранной даты
-    if (model.month != null &&
-        model.month != '' &&
-        model.year != null &&
-        model.year != '') {
-      selectedPeriod = '${model.month}.${model.year}';
-
-      dates = _buildDates(model.month, model.year);
+    if (model.from != null && model.till != null) {
+      dates = _buildDates(model.from, model.till);
     }
 
     statusSysName = model.statusSysName.toUpperCase();
@@ -224,13 +253,16 @@ class TimeSheetComponent implements OnInit {
     } else {
       readOnly = false;
     }
+
+    dateRangePickerOptions.minDate = model.callOffOrderStartDateStr;
+    dateRangePickerOptions.maxDate = model.callOffOrderFinishDateStr;
   }
 
   /**
    * Обработка события обновления значения отработанного времени по ставке
    */
-  void updateSpentTime(RateModel rate) {
-    _service.updateSpentTime(model.id, rate);
+  Future updateSpentTime(RateModel rate) async {
+   await _service.updateSpentTime(model.id, rate);
   }
 
   Map<String, bool> controlStateClasses(NgControl control) => {
@@ -348,5 +380,20 @@ class TimeSheetComponent implements OnInit {
 
   bool isCustomer() {
     return _authorizationService.isInRole(Role.Customer);
+  }
+
+  String getDates() {
+    String result = '';
+
+    if (model.from != null && model.till != null)
+      result = '${model.fromStr} - ${model.tillStr}';
+
+    if (model.from == null && model.till == null) result = '';
+
+    if (model.from == null) result = model.tillStr;
+
+    if (model.till == null) result = model.fromStr;
+
+    return result;
   }
 }

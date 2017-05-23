@@ -21,6 +21,12 @@ class TimeSheetRateComponent {
   @Input()
   bool readOnly = true;
 
+  @Input()
+  DateTime from = null;
+
+  @Input()
+  DateTime till = null;
+
   @Output()
   /**
    * Событие обновления значения отработанного времени по ставке
@@ -72,5 +78,19 @@ class TimeSheetRateComponent {
         rate.spentTime.add(0);
       }
     }
+  }
+
+  /**
+   * Проверяет попадание указанного дня в период табеля
+   */
+  bool inPeriod(DateTime day) {
+    if (from == null || till == null)
+      return false;
+
+    if (day.compareTo(from) >= 0 && day.compareTo(till) <= 0)
+      return true;
+
+    return false;
+
   }
 }
