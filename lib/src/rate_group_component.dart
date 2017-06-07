@@ -84,13 +84,10 @@ class TimeSheetRateComponent {
    * Проверяет попадание указанного дня в период табеля
    */
   bool inPeriod(DateTime day) {
-    if (from == null || till == null)
-      return false;
+    if (from == null || till == null) return false;
 
-    if (day.compareTo(from) >= 0 && day.compareTo(till) <= 0)
-      return true;
+    if (day.compareTo(from) >= 0 && day.compareTo(till) <= 0) return true;
 
     return false;
-
   }
 }

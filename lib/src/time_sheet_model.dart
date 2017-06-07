@@ -9,6 +9,8 @@ import 'additional_data/additional_data_default_model.dart';
 import 'additional_data/additional_data_south_tambey_model.dart';
 import 'rate_group_model.dart';
 
+import 'attachment_model.dart';
+
 @reflectable
 /**
  * Модель Time sheet'a
@@ -30,11 +32,15 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
 
   // Наряд заказ - нача
   DateTime callOffOrderStartDate;
-  String get callOffOrderStartDateStr => callOffOrderStartDate == null ? '' : formatter.format(callOffOrderStartDate);
+  String get callOffOrderStartDateStr => callOffOrderStartDate == null
+      ? ''
+      : formatter.format(callOffOrderStartDate);
 
   // Наряд заказ - окончание
   DateTime callOffOrderFinishDate;
-  String get callOffOrderFinishDateStr => callOffOrderFinishDate == null ? '' : formatter.format(callOffOrderFinishDate);
+  String get callOffOrderFinishDateStr => callOffOrderFinishDate == null
+      ? ''
+      : formatter.format(callOffOrderFinishDate);
 
   // Дата создания
   DateTime createdAt = null;
@@ -70,7 +76,6 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
 
   @Json(exclude: true)
   DateFormat formatter = new DateFormat('dd.MM.yyyy');
-
   @override
   dynamic fromJson(dynamic json) {
     super.fromJson(json);

@@ -20,6 +20,8 @@ import 'additional_data/additional_data_south_tambey_component.dart';
 import 'time_sheet_write_model.dart';
 import 'package:daterangepicker/daterangepicker.dart';
 import 'package:daterangepicker/daterangepicker_directive.dart';
+import 'package:aside/aside_service.dart';
+import 'package:aside/pane_types.dart';
 
 @Component(
     selector: 'time-sheet',
@@ -37,7 +39,7 @@ import 'package:daterangepicker/daterangepicker_directive.dart';
     pipes: const [
       CmWeekDayPipe
     ])
-class TimeSheetComponent implements OnInit {
+class TimeSheetComponent implements OnInit, OnDestroy {
   static const DisplayName = const {
     'displayName': 'Табель учета рабочего времени'
   };
@@ -56,6 +58,7 @@ class TimeSheetComponent implements OnInit {
   final Router _router;
   final TimeSheetService _service;
   final AuthorizationService _authorizationService;
+  final AsideService _asideService;
 
   // Ставки и отработанное время, загруженные с сервера
   List<RateGroupModel> rateGroups = new List<RateGroupModel>();
@@ -66,7 +69,8 @@ class TimeSheetComponent implements OnInit {
   // Модель time sheet'a
   TimeSheetModel model;
 
-  TimeSheetComponent(this._service, this._router, this._authorizationService) {
+  TimeSheetComponent(this._service, this._router, this._authorizationService,
+      this._asideService) {
     // Первоначальная установка даты
     DateTime now = new DateTime.now();
 
@@ -110,10 +114,9 @@ class TimeSheetComponent implements OnInit {
    * Обновление сроков
    */
   Future datesSelected(Map<String, DateTime> value) async {
-
     bool filled = false;
     model.rateGroups.forEach((rg) {
-      rg.rates.forEach((r){
+      rg.rates.forEach((r) {
         if (r.spentTime.any((t) => t > 0)) {
           filled = true;
         }
@@ -137,7 +140,6 @@ class TimeSheetComponent implements OnInit {
    *
    */
   Future updateModel() async {
-
     // Отправка данных на сервер
     var writeModel = new TimeSheetWriteModel()
       ..id = model.id
@@ -154,12 +156,12 @@ class TimeSheetComponent implements OnInit {
   List<DateTime> _buildDates(DateTime from, DateTime till) {
     List<DateTime> result = new List<DateTime>();
 
-   var fromTmp = new DateTime(from.year, from.month, from.day);
+    var fromTmp = new DateTime(from.year, from.month, from.day);
 
-   for (int i = 1; i <= 31; i++) {
-     result.add(fromTmp);
-     fromTmp =  fromTmp.add(new Duration(days: 1));
-   }
+    for (int i = 1; i <= 31; i++) {
+      result.add(fromTmp);
+      fromTmp = fromTmp.add(new Duration(days: 1));
+    }
 
     return result;
   }
@@ -168,15 +170,12 @@ class TimeSheetComponent implements OnInit {
    * Проверяет попадание указанного дня в период табеля
    */
   bool inPeriod(DateTime day) {
-
-    if (model.from == null || model.till == null)
-      return false;
+    if (model.from == null || model.till == null) return false;
 
     if (day.compareTo(model.from) >= 0 && day.compareTo(model.till) <= 0)
       return true;
 
     return false;
-
   }
 
   /**
@@ -219,6 +218,9 @@ class TimeSheetComponent implements OnInit {
    */
   ngOnInit() async {
     await _loadData();
+
+    _asideService.addPane(PaneType.attachments,
+        {'disabled': readOnly, 'timeSheetId': timeSheetId});
   }
 
   _loadData() async {
@@ -262,7 +264,7 @@ class TimeSheetComponent implements OnInit {
    * Обработка события обновления значения отработанного времени по ставке
    */
   Future updateSpentTime(RateModel rate) async {
-   await _service.updateSpentTime(model.id, rate);
+    await _service.updateSpentTime(model.id, rate);
   }
 
   Map<String, bool> controlStateClasses(NgControl control) => {
@@ -395,5 +397,14 @@ class TimeSheetComponent implements OnInit {
     if (model.till == null) result = model.fromStr;
 
     return result;
+  }
+
+  toogleAttachmentsPane() {
+    _asideService.togglePane();
+  }
+
+  @override
+  ngOnDestroy() {
+    _asideService.removePane(PaneType.attachments);
   }
 }
