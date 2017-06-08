@@ -52,8 +52,8 @@ class TimeSheetRateComponent {
 
     if (rate.unit == RateUnit.hour) {
       rate.spentTime[dayIndex] = rate.spentTime[dayIndex] + 1;
-    }
-    else if ((rate.unit == RateUnit.day || rate.unit == RateUnit.month) && rate.spentTime[dayIndex] < 1){
+    } else if ((rate.unit == RateUnit.day || rate.unit == RateUnit.month) &&
+        rate.spentTime[dayIndex] < 1) {
       rate.spentTime[dayIndex] = rate.spentTime[dayIndex] + 1;
     }
 
@@ -74,8 +74,7 @@ class TimeSheetRateComponent {
 
     if (rate.unit == RateUnit.hour) {
       rate.spentTime[dayIndex] = rate.spentTime[dayIndex] - 0.5;
-    }
-    else if (rate.unit == RateUnit.day || rate.unit == RateUnit.month){
+    } else if (rate.unit == RateUnit.day || rate.unit == RateUnit.month) {
       rate.spentTime[dayIndex] = rate.spentTime[dayIndex] - 1;
     }
 
@@ -103,5 +102,4 @@ class TimeSheetRateComponent {
 
     return false;
   }
-
 }

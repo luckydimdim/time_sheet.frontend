@@ -8,7 +8,7 @@ import 'additional_data/additional_data_model_base.dart';
 import 'additional_data/additional_data_default_model.dart';
 import 'additional_data/additional_data_south_tambey_model.dart';
 import 'rate_group_model.dart';
-
+import 'date_range.dart';
 import 'attachment_model.dart';
 
 @reflectable
@@ -75,6 +75,9 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
   String statusSysName = '';
 
   @Json(exclude: true)
+  List<DateRange> availablePeriods = new List<DateRange>();
+
+  @Json(exclude: true)
   DateFormat formatter = new DateFormat('dd.MM.yyyy');
   @override
   dynamic fromJson(dynamic json) {
@@ -85,6 +88,10 @@ class TimeSheetModel extends Object with JsonConverter, MapConverter {
     }
 
     additionalData = _createAdditionalData(json['additionalData']);
+
+    for (dynamic periodJson in json['availablePeriods']) {
+      availablePeriods.add(new DateRange().fromJson(periodJson));
+    }
 
     return this;
   }

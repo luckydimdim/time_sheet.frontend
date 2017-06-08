@@ -22,6 +22,9 @@ import 'package:daterangepicker/daterangepicker.dart';
 import 'package:daterangepicker/daterangepicker_directive.dart';
 import 'package:aside/aside_service.dart';
 import 'package:aside/pane_types.dart';
+import 'package:angular_utils/js_converter.dart';
+import 'package:js/js_util.dart';
+import 'package:js/js.dart';
 
 @Component(
     selector: 'time-sheet',
@@ -105,9 +108,21 @@ class TimeSheetComponent implements OnInit, OnDestroy {
       ];
 
     dateRangePickerOptions = new DateRangePickerOptions()
+      ..isInvalidDate = allowInterop(isInvalidDate)
       ..locale = locale
       ..dateLimit = new DateLimit(days: 30)
       ..opens = 'left';
+  }
+
+  bool isInvalidDate(dynamic jsDate) {
+    DateTime value = JsConverter.getDateTime(jsDate);
+
+    for (var period in model.availablePeriods) {
+      if ((value == period.min || value.isAfter(period.min)) &&
+          (value == period.max || value.isBefore(period.max))) return false;
+    }
+
+    return true;
   }
 
   /**
@@ -126,8 +141,10 @@ class TimeSheetComponent implements OnInit, OnDestroy {
     var startTmp = value['start'];
     var endTmp = value['end'];
 
-    model.from = new DateTime(startTmp.year, startTmp.month, startTmp.day, 0,0,0 );
-    model.till = new DateTime(endTmp.year, endTmp.month, endTmp.day, 23,59,59 );
+    model.from =
+        new DateTime(startTmp.year, startTmp.month, startTmp.day, 0, 0, 0);
+    model.till =
+        new DateTime(endTmp.year, endTmp.month, endTmp.day, 23, 59, 59);
 
     // Установка выбранной даты
     if (model.from != null && model.till != null) {

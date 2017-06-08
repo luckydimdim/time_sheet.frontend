@@ -4,7 +4,6 @@ import 'rate_unit.dart';
  * FIXME: данный класс используется так же в call_off_order.frontend. Отрефакторить
  */
 class RateUtils {
-
   /**
    * Конвертация ед. изм. ставки из строки
    */
@@ -52,5 +51,4 @@ class RateUtils {
         return '???';
     }
   }
-
 }
