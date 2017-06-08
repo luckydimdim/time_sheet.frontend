@@ -123,8 +123,11 @@ class TimeSheetComponent implements OnInit, OnDestroy {
       });
     });
 
-    model.from = value['start'];
-    model.till = value['end'];
+    var startTmp = value['start'];
+    var endTmp = value['end'];
+
+    model.from = new DateTime(startTmp.year, startTmp.month, startTmp.day, 0,0,0 );
+    model.till = new DateTime(endTmp.year, endTmp.month, endTmp.day, 23,59,59 );
 
     // Установка выбранной даты
     if (model.from != null && model.till != null) {

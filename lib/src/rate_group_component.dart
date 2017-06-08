@@ -7,6 +7,9 @@ import 'package:angular_utils/cm_spent_time_pipe.dart';
 import 'rate_model.dart';
 import 'rate_group_model.dart';
 
+import 'rate_unit.dart';
+import 'rate_utils.dart';
+
 @Component(
     selector: 'time-sheet-rate',
     templateUrl: 'rate_group_component.html',
@@ -34,7 +37,7 @@ class TimeSheetRateComponent {
   dynamic updateSpentTime = new EventEmitter<RateModel>();
 
   /**
-   * Добавить 1 к текущему значению ячейки
+   * Добавить значение к текущему значению ячейки
    */
   void add(MouseEvent e, String id, int dayIndex) {
     e.preventDefault();
@@ -47,13 +50,18 @@ class TimeSheetRateComponent {
 
     if (rate.spentTime[dayIndex] >= 99) return;
 
-    rate.spentTime[dayIndex] = rate.spentTime[dayIndex] + 1;
+    if (rate.unit == RateUnit.hour) {
+      rate.spentTime[dayIndex] = rate.spentTime[dayIndex] + 1;
+    }
+    else if ((rate.unit == RateUnit.day || rate.unit == RateUnit.month) && rate.spentTime[dayIndex] < 1){
+      rate.spentTime[dayIndex] = rate.spentTime[dayIndex] + 1;
+    }
 
     updateSpentTime.emit(rate);
   }
 
   /**
-   * Отнять 0.5 от текущего значения ячейки
+   * Отнять значение от текущего значения ячейки
    */
   void substract(MouseEvent e, String id, int dayIndex) {
     e.preventDefault();
@@ -64,7 +72,12 @@ class TimeSheetRateComponent {
 
     if (rate.spentTime[dayIndex] <= 0) return;
 
-    rate.spentTime[dayIndex] = rate.spentTime[dayIndex] - 0.5;
+    if (rate.unit == RateUnit.hour) {
+      rate.spentTime[dayIndex] = rate.spentTime[dayIndex] - 0.5;
+    }
+    else if (rate.unit == RateUnit.day || rate.unit == RateUnit.month){
+      rate.spentTime[dayIndex] = rate.spentTime[dayIndex] - 1;
+    }
 
     updateSpentTime.emit(rate);
   }
@@ -90,4 +103,5 @@ class TimeSheetRateComponent {
 
     return false;
   }
+
 }
