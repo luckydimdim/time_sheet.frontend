@@ -7,29 +7,29 @@
         <div class="card-header">
           <i class="fa fa-clock-o"></i>Ежемесячный табель учета рабочего времени
           <span class="tag tag-pill" [ngClass]="resolveStatusStyleClass(model.statusSysName)">{{ model.statusName }}</span>
-          <button *ngIf="statusSysName=='EMPTY' || statusSysName=='CREATING' || statusSysName=='CORRECTING'" type="button" class="btn btn-sm btn-outline-success ml-1 float-xs-right" (click)="complete()">
+          <button *ngIf="statusSysName=='EMPTY' || statusSysName=='CREATING' || statusSysName=='CORRECTING'" type="button" class="btn btn-sm btn-success ml-1 float-xs-right" [cmLoadingBtn]="complete">
             <i class="fa fa-check-circle"></i>
-            &nbsp; Завершить
+            <span class="ladda-label">&nbsp;Завершить</span>
           </button>
   
-          <button *ngIf="statusSysName=='CREATED' || statusSysName=='CORRECTED'" type="button" class="btn btn-sm btn-outline-success ml-1 float-xs-right" (click)="edit()">
+          <button *ngIf="statusSysName=='CREATED' || statusSysName=='CORRECTED'" type="button" class="btn btn-sm btn-success ml-1 float-xs-right" [cmLoadingBtn]="edit">
             <i class="fa fa-check-circle"></i>
-            &nbsp; Редактировать
+            <span class="ladda-label">&nbsp;Редактировать</span>
           </button>
   
-          <button *ngIf="statusSysName=='APPROVING' && isCustomer()" type="button" class="btn btn-sm btn-danger ml-1 float-xs-right" (click)="correct()">
+          <button *ngIf="statusSysName=='APPROVING' && isCustomer()" type="button" class="btn btn-sm btn-danger ml-1 float-xs-right" [cmLoadingBtn]="correct">
             <i class="fa fa fa-exclamation"></i>
-            &nbsp; На исправление
+            <span class="ladda-label">&nbsp;На исправление</span>
           </button>
           
-          <button *ngIf="statusSysName=='APPROVING' && isCustomer()" type="button" class="btn btn-sm btn-success ml-1 float-xs-right" (click)="approve()">
+          <button *ngIf="statusSysName=='APPROVING' && isCustomer()" type="button" class="btn btn-sm btn-success ml-1 float-xs-right" [cmLoadingBtn]="approve">
             <i class="fa fa-check-square-o"></i>
-            &nbsp; Одобрить
+            <span class="ladda-label">&nbsp;Одобрить</span>
           </button>
           
           <a href="#" [cmRouterLink]="['../RequestView']" class="btn btn-sm btn-primary float-xs-right"><i class="icon-action-undo"></i> Назад</a>
   
-          <button type="button" class="btn btn-sm btn-success mr-1 float-xs-right" (click)="toogleAttachmentsPane()">
+          <button type="button" class="btn btn-sm btn-info mr-1 float-xs-right" (click)="toogleAttachmentsPane()">
             <i class="fa fa-files-o"></i>
             &nbsp; Вложения
           </button>

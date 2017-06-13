@@ -34,7 +34,8 @@ import 'package:js/js.dart';
       AdditionalDataDefaultComponent,
       AdditionalDataSouthTambeyComponent,
       CmRouterLink,
-      DateRangePickerDirective
+      DateRangePickerDirective,
+      CmLoadingBtnDirective
     ],
     providers: const [
       TimeSheetService
