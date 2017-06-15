@@ -2,11 +2,10 @@
   <div class="row cm-rates">
 
     <div class="col-md-12">
-
-      <div *ngIf="model != null"  class="card">
+      <div class="card">
         <div class="card-header">
           <i class="fa fa-clock-o"></i>Ежемесячный табель учета рабочего времени
-          <span class="tag tag-pill" [ngClass]="resolveStatusStyleClass(model.statusSysName)">{{ model.statusName }}</span>
+          <span class="tag tag-pill" [ngClass]="resolveStatusStyleClass(model?.statusSysName)">{{ model?.statusName }}</span>
           <button *ngIf="statusSysName=='EMPTY' || statusSysName=='CREATING' || statusSysName=='CORRECTING'" type="button" class="btn btn-sm btn-success ml-1 float-xs-right" [cmLoadingBtn]="complete">
             <i class="fa fa-check-circle"></i>
             <span class="ladda-label">&nbsp;Завершить</span>
@@ -36,7 +35,8 @@
           
         </div>
         <div class="card-block">
-          <form (change)="updateModel()" #timeSheetForm="ngForm">
+          <loading-spin *ngIf="model == null"></loading-spin>
+          <form (change)="updateModel()" #timeSheetForm="ngForm" *ngIf="model != null"  >
 
             <div class="row">
 

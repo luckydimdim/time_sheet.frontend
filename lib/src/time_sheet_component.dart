@@ -6,7 +6,7 @@ import 'dart:html';
 import 'package:angular2/router.dart';
 
 import 'package:angular_utils/directives.dart';
-import 'package:angular_utils/cm_week_day_pipe.dart';
+import 'package:angular_utils/pipes.dart';
 
 import 'package:auth/auth_service.dart';
 import 'time_sheet_service.dart';
@@ -35,7 +35,8 @@ import 'package:js/js.dart';
       AdditionalDataSouthTambeyComponent,
       CmRouterLink,
       DateRangePickerDirective,
-      CmLoadingBtnDirective
+      CmLoadingBtnDirective,
+      CmLoadingSpinComponent
     ],
     providers: const [
       TimeSheetService
@@ -374,6 +375,9 @@ class TimeSheetComponent implements OnInit, OnDestroy {
    */
   Map<String, bool> resolveStatusStyleClass(String statusSysName) {
     Map<String, bool> result = new Map<String, bool>();
+
+    if (statusSysName == null)
+      return result;
 
     String status = statusSysName.toUpperCase();
 
