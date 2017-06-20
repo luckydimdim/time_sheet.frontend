@@ -44,7 +44,7 @@ import 'package:js/js.dart';
     pipes: const [
       CmWeekDayPipe
     ])
-class TimeSheetComponent implements OnInit, OnDestroy {
+class TimeSheetComponent implements OnInit, OnDestroy, CanDeactivate {
   static const DisplayName = const {
     'displayName': 'Табель учета рабочего времени'
   };
@@ -74,8 +74,12 @@ class TimeSheetComponent implements OnInit, OnDestroy {
   // Модель time sheet'a
   TimeSheetModel model;
 
+  bool wasChanges = false;
+
+  FormBuilder form;
+
   TimeSheetComponent(this._service, this._router, this._authorizationService,
-      this._asideService) {
+      this._asideService, this.form) {
     // Первоначальная установка даты
     DateTime now = new DateTime.now();
 
@@ -140,6 +144,21 @@ class TimeSheetComponent implements OnInit, OnDestroy {
       });
     });
 
+    if (filled &&
+        window.confirm('Введенные данные будут удалены. Продолжить?') ==
+            false) {
+      periodControl.setStartDate(model.fromStr);
+      periodControl.setEndDate(model.tillStr);
+
+      return;
+    }
+
+    model.rateGroups.forEach((rg) {
+      rg.rates.forEach((r) {
+        r.spentTime = new List<num>();
+      });
+    });
+
     var startTmp = value['start'];
     var endTmp = value['end'];
 
@@ -153,9 +172,7 @@ class TimeSheetComponent implements OnInit, OnDestroy {
       dates = _buildDates(model.from, model.till);
     }
 
-    await updateModel();
-
-    await _loadData();
+    wasChanges = true;
   }
 
   /**
@@ -169,7 +186,15 @@ class TimeSheetComponent implements OnInit, OnDestroy {
       ..till = model.till
       ..notes = model.notes;
 
+    model.rateGroups.forEach((group) {
+      group.rates.forEach((rate) {
+        writeModel.rates.add(rate);
+      });
+    });
+
     await _service.updateTimeSheet(writeModel);
+
+    wasChanges = false;
   }
 
   /**
@@ -246,9 +271,6 @@ class TimeSheetComponent implements OnInit, OnDestroy {
   }
 
   _loadData() async {
-    // Просьба здесь не использовать подмену ID, т.к. часто этот код попадает в основной репозиторий
-    // Предлагаю использовать main.dart и input - timeSheetId
-
     if (timeSheetId == null) {
       // в Input не передали. Пробуем вытащить из url
       Instruction ci = _router.parent?.currentInstruction;
@@ -285,8 +307,16 @@ class TimeSheetComponent implements OnInit, OnDestroy {
   /**
    * Обработка события обновления значения отработанного времени по ставке
    */
-  Future updateSpentTime(RateModel rate) async {
-    await _service.updateSpentTime(model.id, rate);
+  Future updateSpentTime(RateModel newRate) async {
+    model.rateGroups.forEach((group) {
+      group.rates.forEach((rate) {
+        if (rate.id == newRate.id) {
+          rate = newRate;
+        }
+      });
+    });
+
+    wasChanges = true;
   }
 
   Map<String, bool> controlStateClasses(NgControl control) => {
@@ -303,6 +333,8 @@ class TimeSheetComponent implements OnInit, OnDestroy {
    */
   complete() async {
     try {
+      await updateModel();
+
       if (statusSysName == 'EMPTY' || statusSysName == 'CREATING')
         await _service.updateStatus(model.id, 'CREATED');
       else if (statusSysName == 'CORRECTING')
@@ -376,8 +408,7 @@ class TimeSheetComponent implements OnInit, OnDestroy {
   Map<String, bool> resolveStatusStyleClass(String statusSysName) {
     Map<String, bool> result = new Map<String, bool>();
 
-    if (statusSysName == null)
-      return result;
+    if (statusSysName == null) return result;
 
     String status = statusSysName.toUpperCase();
 
@@ -431,5 +462,16 @@ class TimeSheetComponent implements OnInit, OnDestroy {
   @override
   ngOnDestroy() {
     _asideService.removePane(PaneType.attachments);
+  }
+
+  notesChanges() {
+    wasChanges = true;
+  }
+
+  @override
+  bool routerCanDeactivate(next, prev) {
+    if (!wasChanges) return true;
+
+    return window.confirm('Изменения будут сброшены. Продолжить?');
   }
 }

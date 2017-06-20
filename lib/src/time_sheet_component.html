@@ -36,7 +36,7 @@
         </div>
         <div class="card-block">
           <loading-spin *ngIf="model == null"></loading-spin>
-          <form (change)="updateModel()" #timeSheetForm="ngForm" *ngIf="model != null"  >
+          <form #timeSheetForm="ngForm" *ngIf="model != null"  >
 
             <div class="row">
 
@@ -56,7 +56,7 @@
 
               <div class="col-md-2 float-md-right">
                 <label for="time-sheet-dates">Период</label>
-                <input daterangepicker type="text" class="form-control"
+                <input daterangepicker type="text" class="form-control" #periodControl
                        style="padding: 0.25rem"
                        id="time-sheet-dates"
                        placeholder=""
@@ -143,6 +143,7 @@
                             [disabled]="readOnly"
                             ngControl="notes"
                             #notesControl="ngForm"
+                            (change)="notesChanges()"
                             [ngClass]="controlStateClasses(notesControl)"
                             [class.form-control-danger]="!notesControl.valid && (notesControl.dirty || notesControl.touched)"
                             [class.form-control-success]="notesControl.valid && notesControl.touched"></textarea>

@@ -208,24 +208,27 @@ class TimeSheetService {
     return result;
   }
 
-  String getAttachmentDownloadUrl(String timeSheetId, String fileName, String token) {
-    return _config.helper.timeSheetsUrl + '/$timeSheetId/attachment/$fileName?token=$token';
+  String getAttachmentDownloadUrl(
+      String timeSheetId, String fileName, String token) {
+    return _config.helper.timeSheetsUrl +
+        '/$timeSheetId/attachment/$fileName?token=$token';
   }
 
   /**
    * Создать токен для скачивания
    */
-  Future<String> createAttachmentToken(String timeSheetId, String fileName) async {
+  Future<String> createAttachmentToken(
+      String timeSheetId, String fileName) async {
     Response response = null;
 
-    var url =
-        _config.helper.timeSheetsUrl + '/$timeSheetId/attachment-token/$fileName';
+    var url = _config.helper.timeSheetsUrl +
+        '/$timeSheetId/attachment-token/$fileName';
 
     _logger.trace('create attach token ${ fileName}');
 
     try {
       response =
-      await _http.post(url, headers: {'Content-Type': 'application/json'});
+          await _http.post(url, headers: {'Content-Type': 'application/json'});
     } catch (e) {
       _logger.error('Failed to create attach token: $e');
 
