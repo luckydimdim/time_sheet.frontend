@@ -238,31 +238,6 @@ class TimeSheetService {
   }
 
   /**
-   * Создание нового time sheet'a
-   */
-  Future<TimeSheetModel> createRequest(TimeSheetModel model) async {
-    Response response = null;
-
-    _logger.trace('Creating time sheet ${ model.toJson() }');
-
-    try {
-      response = await _http.post(_config.helper.timeSheetsUrl,
-          body: model.toJsonString(),
-          headers: {'Content-Type': 'application/json'});
-
-      _logger.trace('Time sheet created');
-    } catch (e) {
-      print('Failed to compose request: $e');
-
-      rethrow;
-    }
-
-    dynamic json = JSON.decode(response.body);
-
-    return new TimeSheetModel().fromJson(json);
-  }
-
-  /**
    * Изменение time sheet'a
    */
   updateTimeSheet(TimeSheetWriteModel model) async {
@@ -278,24 +253,6 @@ class TimeSheetService {
       _logger.trace('Time sheet ${ model.id } successfuly updated');
     } catch (e) {
       _logger.error('Failed to update time sheet: $e');
-
-      rethrow;
-    }
-  }
-
-  /**
-   * Удаление time sheet'a
-   */
-  deleteRequest(String id) async {
-    _logger.trace(
-        'Removing time sheet. Url: ${ _config.helper.timeSheetsUrl }/$id');
-
-    try {
-      await _http.delete('${ _config.helper.timeSheetsUrl }/$id',
-          headers: {'Content-Type': 'application/json'});
-      _logger.trace('Time sheet $id removed');
-    } catch (e) {
-      _logger.error('Failed to remove time sheet: $e');
 
       rethrow;
     }
