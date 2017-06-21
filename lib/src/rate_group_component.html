@@ -1,8 +1,8 @@
-<div class="row mx-0 rate_group" style="margin-top: -2px">
+<div class="row mx-0 rate_group text-nowrap" style="margin-top: -2px">
 
   <div class="col-md-2 font-weight-bold" [class.rate_name_long]="rateGroup.name == ''">
     {{ rateGroup.name == null || rateGroup.name.trim() == '' ? rateGroup.rates[0].name : rateGroup.name }}
-    <span *ngIf="(rateGroup.name == null || rateGroup.name.trim() == '') && (rateGroup.rates[0].unitName != null && rateGroup.rates[0].unitName.trim() != '')" class="font-xxs text-muted">
+    <span *ngIf="(rateGroup.name == null || rateGroup.name.trim() == '') && (rateGroup.rates[0].unitName != null && rateGroup.rates[0].unitName.trim() != '')" class="font-xxs text-muted text-nowrap">
           1 = 1 {{ rateGroup.rates[0].unitName }}
         </span>
   </div>
