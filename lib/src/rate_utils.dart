@@ -44,9 +44,8 @@ class RateUtils {
       case RateUnit.hour:
         return 'час';
       case RateUnit.day:
-        return 'день';
       case RateUnit.month:
-        return 'часть месяца';
+        return 'день';
       default:
         return '???';
     }
